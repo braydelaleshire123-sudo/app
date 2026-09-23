@@ -1,45 +1,160 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Password Security Lab</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f3f4f6;color:#202124;font-family:Arial,Helvetica,sans-serif;min-height:100vh}
-body:before{content:none}
-main{max-width:980px;margin:auto;padding:40px 20px}.card{background:#fff;border:1px solid #dadce0;border-radius:8px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
-.top{display:flex;justify-content:space-between;gap:15px;align-items:center;border-bottom:1px solid #e5e7eb;padding-bottom:16px;margin-bottom:28px}.brand{color:#202124;font-weight:600;letter-spacing:0}.status{color:#5f6368;font-size:12px}.dot{display:inline-block;width:7px;height:7px;background:#34a853;border-radius:50%;margin-right:7px}
-h1{margin:0 0 8px;font-size:28px;color:#202124}.sub{color:#5f6368;margin-bottom:24px;font-size:14px}.safe{display:inline-block;color:#62f3c0;border:1px solid #176b58;background:#041812;padding:5px 9px;font-size:10px;letter-spacing:1px}
-.grid,.controls{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:760px){.grid,.controls{grid-template-columns:1fr}}
-label{display:block;font-size:10px;color:#6ea6b8;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}input,select{width:100%;padding:11px;border-radius:6px;border:1px solid #c9cdd2;background:#fff;color:#202124;font:inherit;font-size:14px;outline:none}input:focus,select:focus{border-color:#1a73e8;box-shadow:0 0 0 2px rgba(26,115,232,.12)}
-.controls{margin-top:12px}.check{display:flex;align-items:center;gap:8px;margin-top:12px;color:#6e9cac;font-size:11px;text-transform:none;letter-spacing:0}.check input{width:auto;accent-color:#43eaff}
-button{margin-top:18px;width:100%;padding:12px;border:1px solid #1a73e8;border-radius:6px;background:#1a73e8;color:#fff;font:inherit;font-weight:600;letter-spacing:0;cursor:pointer}button:hover{background:#1765c1}button:disabled{opacity:.55;cursor:wait}
-.future{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:9px;margin:16px 0}@media(max-width:760px){.future{grid-template-columns:1fr}}.module{border:1px solid #e0e3e7;background:#f8f9fa;padding:14px;position:relative;overflow:hidden}.module:after{content:none}.module b{display:block;color:#202124;font-size:14px}.module span{color:#6b7280;font-size:11px;letter-spacing:0}
-.stats{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.stat{background:#f8f9fa;border:1px solid #e0e3e7;padding:10px 12px;min-width:105px}.stat b{display:block;font-size:18px;color:#1769aa}.muted{color:#527581;font-size:9px;text-transform:uppercase}
-#out{margin-top:22px}.list{max-height:70vh;overflow:auto;border:1px solid #e0e3e7;padding:5px;background:#fff}.row{display:flex;justify-content:space-between;gap:12px;padding:9px 10px;margin:3px 0;background:#fff;border-bottom:1px solid #edf0f2;font-size:13px}.row:hover{background:#f8f9fa}.weak{color:#ffb45f}.medium{color:#f0db67}.strong{color:#62f3c0}.bruh{color:#ff6877;font-weight:800}.unpredictable{color:#c99aff;font-weight:800}.badge{padding:2px 7px;border:1px solid #d9dee3;background:#f8f9fa;font-size:9px;white-space:nowrap}.ai{color:#1769aa}
-.note{margin-top:14px;padding:10px;border:1px solid #e0e3e7;background:#f8f9fa;color:#6b7280;font-size:11px;line-height:1.5}
-.loader{margin-top:22px;padding:18px;background:#f8f9fa;border:1px solid #e0e3e7;text-align:left}.terminal{color:#374151;min-height:48px;font-size:12px;line-height:1.8}.terminal:before{content:"";}.bar{height:6px;background:#e5e7eb;overflow:hidden;margin:15px 0 9px}.fill{height:100%;width:0;background:#1a73e8;transition:width .2s linear}.percent{font-size:20px;font-weight:600;color:#202124}.funny{color:#6b7280;margin-top:8px;font-size:10px}
-</style></head>
-<body><main><div class="card">
-<div class="top"><div class="brand">PASSWORD SECURITY LAB</div><div class="status"><span class="dot"></span>ANALYSIS ENGINE ONLINE</div></div>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:#ffffff;
+  color:#222;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  line-height:1.5;
+}
+main{max-width:900px;margin:0 auto;padding:32px 18px 50px}
+.card{
+  background:#fff;
+  border:1px solid #ddd;
+  border-radius:6px;
+  padding:28px;
+}
+header{border-bottom:1px solid #e5e5e5;padding-bottom:20px;margin-bottom:24px}
+.brand{font-size:13px;font-weight:600;color:#555;margin-bottom:12px}
+h1{font-size:28px;font-weight:600;margin:0 0 7px;color:#222}
+.sub{font-size:14px;color:#666;margin:0}
+.section{margin-top:24px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}}
+label{display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px}
+input,select{
+  width:100%;
+  padding:10px 11px;
+  border:1px solid #ccc;
+  border-radius:5px;
+  background:#fff;
+  color:#222;
+  font:inherit;
+  font-size:14px;
+}
+input:focus,select:focus{outline:none;border-color:#777;box-shadow:0 0 0 2px rgba(0,0,0,.06)}
+.check{display:flex;align-items:center;gap:8px;font-weight:400;margin-top:16px}
+.check input{width:auto}
+button{
+  width:100%;
+  margin-top:20px;
+  padding:11px 14px;
+  border:1px solid #333;
+  border-radius:5px;
+  background:#333;
+  color:#fff;
+  font:inherit;
+  font-weight:600;
+  cursor:pointer;
+}
+button:hover{background:#222}
+button:disabled{opacity:.55;cursor:wait}
+.info{
+  margin-top:22px;
+  padding:13px 14px;
+  background:#f7f7f7;
+  border:1px solid #e2e2e2;
+  border-radius:5px;
+  color:#666;
+  font-size:13px;
+}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 16px}
+.stat{min-width:100px;padding:10px 12px;border:1px solid #ddd;border-radius:5px;background:#fafafa}
+.stat b{display:block;font-size:18px;color:#222}
+.muted{font-size:11px;color:#777}
+h2{font-size:18px;font-weight:600;margin:18px 0 10px}
+.list{max-height:70vh;overflow:auto;border:1px solid #ddd;border-radius:5px;background:#fff}
+.row{display:flex;justify-content:space-between;gap:12px;padding:9px 11px;border-bottom:1px solid #eee;font-size:13px}
+.row:last-child{border-bottom:0}
+.row:hover{background:#fafafa}
+.badge{display:inline-block;padding:2px 6px;border:1px solid #ddd;border-radius:4px;background:#f7f7f7;font-size:10px;white-space:nowrap}
+.ai{color:#555}
+.weak{color:#b42318}
+.medium{color:#8a5a00}
+.strong{color:#216e39}
+.bruh{color:#b42318;font-weight:700}
+.unpredictable{color:#555;font-weight:700}
+.loader{margin-top:22px;padding:18px;border:1px solid #ddd;border-radius:5px;background:#fafafa}
+.terminal{min-height:24px;color:#555;font-size:13px}
+.bar{height:6px;background:#e5e5e5;border-radius:3px;overflow:hidden;margin:14px 0 8px}
+.fill{height:100%;width:0;background:#333;transition:width .2s linear}
+.percent{font-size:18px;font-weight:600}
+.funny{margin-top:7px;color:#777;font-size:11px}
+.note{margin-top:12px;color:#777;font-size:12px}
+</style>
+</head>
+<body>
+<main>
+  <div class="card">
+    <header>
+      <div class="brand">PASSWORD SECURITY LAB</div>
+      <h1>Password Security Lab</h1>
+      <p class="sub">Analyze fictional password examples using a local security scoring model.</p>
+    </header>
 
-<h1>Password Security Lab</h1>
-<div class="sub">Analyze fictional password patterns and see how an AI-style security model rates them.</div>
-<div class="future">
-<div class="module"><b>AI PATTERN ANALYSIS</b><span>LOCAL SECURITY MODEL // READY</span></div>
-<div class="module"><b>LOCAL</b><span>YOUR DATA STAYS IN THIS PAGE</span></div>
-<div class="module"><b>OFFLINE</b><span>NO ACCOUNT OR NETWORK TESTING</span></div>
-</div>
-<div class="grid">
-<div><label>Fictional name</label><input id="name" placeholder="Alex Morgan"></div>
-<div><label>Fictional date of birth</label><input id="dob" type="date"></div>
-</div>
-<div class="controls">
-<div><label>Pattern type</label><select id="type"><option value="all">All patterns</option><option value="numbers">Numbers only</option><option value="words">Words + numbers</option><option value="mixed">Mixed characters</option></select></div>
-<div><label>How many examples</label><select id="count"><option value="1000">1,000</option><option value="3000" selected>3,000</option><option value="5000">5,000</option></select></div>
-<div><label>Sort by</label><select id="sort"><option value="generated">Generated order</option><option value="ai-likely">AI pattern score (simulated)</option><option value="strength-desc">Strongest first</option><option value="strength-asc">Weakest first</option><option value="length-desc">Longest first</option><option value="length-asc">Shortest first</option><option value="az">A → Z</option><option value="za">Z → A</option></select></div>
-</div>
-<label class="check"><input id="chaos" type="checkbox" checked> Include random high-entropy examples</label>
-<button id="go" type="button">Generate example passwords</button>
-<div id="out"></div>
-</div></main>
-<script defer src="script.js"></script></body></html>
+    <div class="section">
+      <div class="grid">
+        <div>
+          <label for="name">Fictional name</label>
+          <input id="name" placeholder="Alex Morgan">
+        </div>
+        <div>
+          <label for="dob">Fictional date of birth</label>
+          <input id="dob" type="date">
+        </div>
+        <div>
+          <label for="type">Pattern type</label>
+          <select id="type">
+            <option value="all">All patterns</option>
+            <option value="numbers">Numbers only</option>
+            <option value="words">Words + numbers</option>
+            <option value="mixed">Mixed characters</option>
+          </select>
+        </div>
+        <div>
+          <label for="count">How many examples</label>
+          <select id="count">
+            <option value="1000">1,000</option>
+            <option value="3000" selected>3,000</option>
+            <option value="5000">5,000</option>
+          </select>
+        </div>
+        <div>
+          <label for="sort">Sort by</label>
+          <select id="sort">
+            <option value="generated">Generated order</option>
+            <option value="ai-likely">Pattern score</option>
+            <option value="strength-desc">Strongest first</option>
+            <option value="strength-asc">Weakest first</option>
+            <option value="length-desc">Longest first</option>
+            <option value="length-asc">Shortest first</option>
+            <option value="az">A → Z</option>
+            <option value="za">Z → A</option>
+          </select>
+        </div>
+      </div>
+
+      <label class="check">
+        <input id="chaos" type="checkbox" checked>
+        Include random high-entropy examples
+      </label>
+
+      <button id="go" type="button">Generate example passwords</button>
+
+      <div id="out"></div>
+
+      <div class="info">
+        This page uses fictional data only. It does not test accounts, websites, or real passwords.
+      </div>
+    </div>
+  </div>
+</main>
+<script defer src="script.js"></script>
+</body>
+</html>
