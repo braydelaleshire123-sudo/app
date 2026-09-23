@@ -38,13 +38,23 @@ function generate(count,type,chaos,seed,profile){
  const safeLower=['blue','tiger','rocket','maple','cedar','pixel','comet','river','falcon','quartz','orbit','forest'];
  const mixedChars='aZ7!kP2@qR9#vT4$';
  function balanced(i){
-   const b=i%6;
-   if(b===0) return safeLower[i%safeLower.length].slice(0,5);
-   if(b===1) return (first||'alex').slice(0,5)+(10+(i%90));
-   if(b===2){const term=profileWordExamples.length?profileWordExamples[i%profileWordExamples.length]:safeLower[i%safeLower.length];return term.slice(0,6)+(favNum||datePieces[i%Math.max(1,datePieces.length)]||'42')+'!';}
-   if(b===3) return safeWords[i%safeWords.length]+(i%10)+'Sky!';
-   if(b===4){let p='';for(let j=0;j<13;j++)p+=mixedChars[(i*7+j*3)%mixedChars.length];return p;}
-   let p='';for(let j=0;j<20;j++)p+=mixedChars[(i*11+j*5)%mixedChars.length];return p;
+   const b=i%12;
+   const words=['Blue','Tiger','Rocket','Maple','Cedar','Pixel','Comet','River','Falcon','Quartz','Orbit','Forest'];
+   const w=words[i%words.length],w2=words[(i*5+3)%words.length];
+   const term=profileWordExamples.length?profileWordExamples[i%profileWordExamples.length]:'';
+   const nums=profileNumberExamples.length?profileNumberExamples[i%profileNumberExamples.length]:(10+(i%90)).toString();
+   if(b===0) return w.toLowerCase().slice(0,5);
+   if(b===1) return (first||'alex').slice(0,5)+(11+(i%17));
+   if(b===2) return (first||'alex').slice(0,4)+'_'+w.toLowerCase().slice(0,4)+(12+(i%19));
+   if(b===3) return (term||w.toLowerCase()).slice(0,6)+nums.slice(0,4)+'!';
+   if(b===4) return w+w2+(i%100)+'!';
+   if(b===5) return w.toLowerCase()+'-'+w2.toLowerCase()+(20+(i%80));
+   if(b===6) return w+(i%10)+'Sky!';
+   if(b===7) return (first||'alex').slice(0,3)+w+(i%100)+'#';
+   if(b===8){let p='';for(let j=0;j<13;j++)p+=mixedChars[(i*13+j*7)%mixedChars.length];return p;}
+   if(b===9){let p='';for(let j=0;j<15;j++)p+=mixedChars[(i*17+j*11+3)%mixedChars.length];return p;}
+   if(b===10){let p='';for(let j=0;j<18;j++)p+=mixedChars[(i*19+j*13+5)%mixedChars.length];return p;}
+   let p='';for(let j=0;j<22;j++)p+=mixedChars[(i*23+j*17+7)%mixedChars.length];return p;
  }
  let safety=0; while(set.size<count && safety++<count*200){
    const i=safety-1;
@@ -56,7 +66,7 @@ function generate(count,type,chaos,seed,profile){
      else p=String((chaos?Math.floor(r()*90000000)+10000000:10+Math.floor(r()*90)));
    } else if(type==='all'||type==='mixed'){
      p=balanced(i);
-     if(chaos&&i%10===9)p=randomish(r,18,true);
+     if(chaos&&i%12===11)p=randomish(r,18,true);
    } else if(type==='words'){
      p=balanced(i);
      if(i%6===3)p=safeWords[i%safeWords.length]+'-'+safeLower[(i+2)%safeLower.length];
