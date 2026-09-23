@@ -47,77 +47,21 @@ h2{font-size:16px;font-weight:650;color:#dbe1e9;margin:20px 0 10px}
 
     <div class="section">
       <div class="grid">
-        <div>
-          <label for="name">Fictional name</label>
-          <input id="name" placeholder="Alex Morgan">
-        </div>
-        <div>
-          <label for="dob">Fictional date of birth</label>
-          <input id="dob" type="date" aria-label="Date of birth">
-    <div class="week"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div>
-    <div class="days" id="calDays"></div>
-  </div>
+<div><label for="name">Fictional name</label><input id="name" placeholder="Alex Morgan"></div>
+<div><label for="dob">Fictional date of birth</label><input id="dob" type="date" aria-label="Date of birth"></div>
+<div><label for="favorite">Favorite thing (fictional)</label><input id="favorite" placeholder="Dolphin, soccer, music..."></div>
+<div><label for="nickname">Nickname (fictional)</label><input id="nickname" placeholder="Alex"></div>
+<div><label for="place">Favorite place (fictional)</label><input id="place" placeholder="Beach, city, park..."></div>
+<div><label for="hobby">Favorite hobby (fictional)</label><input id="hobby" placeholder="Skateboarding"></div>
+<div><label for="animal">Favorite animal (fictional)</label><input id="animal" placeholder="Dolphin"></div>
+<div><label for="game">Favorite game (fictional)</label><input id="game" placeholder="ExampleQuest"></div>
+<div><label for="team">Favorite team (fictional)</label><input id="team" placeholder="Example FC"></div>
+<div><label for="music">Favorite music/artist (fictional)</label><input id="music" placeholder="Example Artist"></div>
+<div><label for="importantYear">Important year (fictional)</label><input id="importantYear" type="number" min="1900" max="2026" placeholder="2015"></div>
+<div><label for="type">Pattern type</label><select id="type"><option value="all">All patterns</option><option value="numbers">Numbers only</option><option value="words">Words + numbers</option><option value="mixed">Mixed characters</option></select></div>
+<div><label for="count">How many examples</label><select id="count"><option value="1000">1,000</option><option value="3000" selected>3,000</option><option value="5000">5,000</option></select></div>
+<div><label for="sort">Sort by</label><select id="sort"><option value="generated">Generated order</option><option value="ai-likely">Pattern score</option><option value="strength-desc">Strongest first</option><option value="strength-asc">Weakest first</option><option value="length-desc">Longest first</option><option value="length-asc">Shortest first</option><option value="az">A → Z</option><option value="za">Z → A</option></select></div>
 </div>
-        </div>
-        <div>
-          <label for="favorite">Favorite thing (fictional)</label>
-          <input id="favorite" placeholder="Dolphin, soccer, music...">
-        </div>
-        <div>
-          <label for="nickname">Nickname (fictional)</label>
-          <input id="nickname" placeholder="Alex">
-        </div>
-        <div>
-          <label for="place">Favorite place (fictional)</label>
-          <input id="place" placeholder="Beach, city, park...">
-        </div>
-        <div>
-          <label for="importantYear">Important year (fictional)</label>
-          <input id="importantYear" type="number" min="1900" max="2026" placeholder="2015">
-        </div>
-        <div>
-          <label for="hobby">Fictional favorite hobby</label>
-          <input id="hobby" placeholder="Skateboarding">
-        </div>
-        <div>
-          <label for="thing">Fictional favorite thing</label>
-          <input id="thing" placeholder="Dolphin">
-        </div>
-        <div>
-          <label for="nickname">Fictional nickname</label>
-          <input id="nickname" placeholder="Ace">
-        </div>
-        <div>
-          <label for="type">Pattern type</label>
-          <select id="type">
-            <option value="all">All patterns</option>
-            <option value="numbers">Numbers only</option>
-            <option value="words">Words + numbers</option>
-            <option value="mixed">Mixed characters</option>
-          </select>
-        </div>
-        <div>
-          <label for="count">How many examples</label>
-          <select id="count">
-            <option value="1000">1,000</option>
-            <option value="3000" selected>3,000</option>
-            <option value="5000">5,000</option>
-          </select>
-        </div>
-        <div>
-          <label for="sort">Sort by</label>
-          <select id="sort">
-            <option value="generated">Generated order</option>
-            <option value="ai-likely">Pattern score</option>
-            <option value="strength-desc">Strongest first</option>
-            <option value="strength-asc">Weakest first</option>
-            <option value="length-desc">Longest first</option>
-            <option value="length-asc">Shortest first</option>
-            <option value="az">A → Z</option>
-            <option value="za">Z → A</option>
-          </select>
-        </div>
-      </div>
 
       <label class="check">
         <input id="chaos" type="checkbox" checked>
