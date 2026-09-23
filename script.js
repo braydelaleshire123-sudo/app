@@ -23,12 +23,20 @@ const letters='abcdefghijklmnopqrstuvwxyz',symbols='!@#$%^&*_+=?';
 function rndLen(r,n){return Math.floor(r()*n)}
 function randomish(r,n,withSymbols){let p='';for(let i=0;i<n;i++){let q=r();if(q<.42)p+=letters[Math.floor(r()*26)];else if(q<.78)p+=letters[Math.floor(r()*26)].toUpperCase();else if(q<.93)p+=Math.floor(r()*10);else if(withSymbols)p+=symbols[Math.floor(r()*symbols.length)];else p+=Math.floor(r()*10)}return p}
 function advancedPattern(r,first,last,y,m,d,extra=[]){const year=String(y),yy=year.slice(-2),mm=String(m).padStart(2,'0'),dd=String(d).padStart(2,'0');const clean=s=>s.replace(/[^a-z]/gi,'');const f=clean(first),l=clean(last);const leet=s=>s.replace(/a/gi,'4').replace(/e/gi,'3').replace(/i/gi,'1').replace(/o/gi,'0').replace(/s/gi,'5');const extras=extra.filter(Boolean).map(clean).filter(Boolean);const e=extras.length?extras[Math.floor(r()*extras.length)]:'example';const variants=[f+dd+yy,l+mm+yy,f+'_'+l,f+'.'+l,f+'-'+l,leet(f)+yy,leet(l)+dd,f.toUpperCase()+mm,f+l+dd,l+f+yy,f+dd+'!'+yy,f+'@'+mm+dd,e+yy,e+'123',f+e+dd,leet(e)+yy,randomish(r,18+rndLen(r,8),true),randomish(r,22+rndLen(r,10),true)];return variants[Math.floor(r()*variants.length)]}
-function generate(count,type,chaos,seed){
+function generate(count,type,chaos,seed,profile){
  const r=rng(seed),set=new Set();
+ const terms=profileTerms(profile||{}), first=(profile.first||'alex').replace(/[^a-z0-9]/gi,''), last=(profile.last||'morgan').replace(/[^a-z0-9]/gi,'');
  while(set.size<count){
   let p='';
   if(type==='numbers') p=String(Math.floor(r()*90000000)+10000000);
-  else if(type==='words') p=randomish(r,8+Math.floor(r()*7),false)+'-'+randomish(r,4,false);
+  else if((type==='words'||type==='mixed'||type==='all') && terms.length && r()<0.65){
+    const a=terms[Math.floor(r()*terms.length)], b=terms.length>1?terms[Math.floor(r()*terms.length)]:first;
+    const suffix=r()<0.55?String(1900+Math.floor(r()*127)):(Math.floor(r()*900)+100).toString();
+    const join=r()<0.35?'':(r()<0.5?'_':'');
+    p=a+join+b+suffix;
+    if(r()<0.35)p=p[0].toUpperCase()+p.slice(1);
+    if(r()<0.18)p+='!';
+  } else if(type==='words') p=randomish(r,8+Math.floor(r()*7),false)+'-'+randomish(r,4,false);
   else p=randomish(r,(chaos?18:11)+Math.floor(r()*(chaos?10:7)),type==='mixed'||type==='all');
   if(p.length>=6)set.add(p);
  }
@@ -63,11 +71,11 @@ go.addEventListener('click',function(){
       const type=document.getElementById('type').value;
       const chaos=document.getElementById('chaos').checked;
       const profile={favorite:document.getElementById('favorite').value.trim(),nickname:document.getElementById('nickname').value.trim(),place:document.getElementById('place').value.trim(),hobby:document.getElementById('hobby').value.trim(),animal:document.getElementById('animal').value.trim(),game:document.getElementById('game').value.trim(),team:document.getElementById('team').value.trim(),music:document.getElementById('music').value.trim(),importantYear:document.getElementById('importantYear').value.trim(),dob:dob};
-      const arr=generate(count,type,chaos,hash(name+'|'+JSON.stringify(profile))); const mode=document.getElementById('sort').value;
+      profile.first=name.split(/\s+/)[0]||'alex'; profile.last=name.split(/\s+/).at(-1)||'morgan'; const arr=generate(count,type,chaos,hash(name+'|'+JSON.stringify(profile)),profile); const mode=document.getElementById('sort').value;
       const rank={'BRUH':0,'WEAK':1,'MEDIUM':2,'STRONG':3,'VERY STRONG':4,'UNGUESSABLE*':5};
       arr.sort(function(a,b){
-        if(mode==='ai-likely')return aiPatternScore(b,'','','','','')-aiPatternScore(a,'','','','','');
-        if(mode==='strength-desc')return rank[analyze(b,'','','','','')[0]]-rank[analyze(a,'','','','','')[0]];
+        if(mode==='ai-likely')return aiPatternScore(b,profile.first,profile.last,y,m,d,terms)-aiPatternScore(a,profile.first,profile.last,y,m,d,terms);
+        if(mode==='strength-desc')return rank[analyze(b,profile.first,profile.last,y,m,d,terms)[0]]-rank[analyze(a,profile.first,profile.last,y,m,d,terms)[0]];
         if(mode==='strength-asc')return rank[analyze(a,'','','','','')[0]]-rank[analyze(b,'','','','','')[0]];
         if(mode==='length-desc')return b.length-a.length;
         if(mode==='length-asc')return a.length-b.length;
