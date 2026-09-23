@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Password Security Lab</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#070b12;color:#e8f0ff;font-family:Inter,system-ui,sans-serif;min-height:100vh}
+main{max-width:900px;margin:auto;padding:34px 18px}.card{background:#0e1522;border:1px solid #26344a;border-radius:18px;padding:24px;box-shadow:0 18px 50px #0008}
+h1{margin:0 0 8px;font-size:32px}.sub{color:#9eacc0;margin-bottom:25px}.safe{display:inline-block;color:#7ee2a8;background:#123322;border:1px solid #245f3c;padding:6px 10px;border-radius:999px;font-size:13px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:650px){.grid{grid-template-columns:1fr}}
+label{display:block;font-size:13px;color:#aebbd0;margin-bottom:6px}input{width:100%;padding:13px;border-radius:10px;border:1px solid #30415a;background:#080e18;color:white;font-size:16px}
+button{margin-top:18px;width:100%;padding:13px;border:0;border-radius:10px;background:#4d8dff;color:white;font-weight:700;font-size:16px;cursor:pointer}button:hover{filter:brightness(1.1)}
+#out{margin-top:22px}.row{display:flex;justify-content:space-between;gap:12px;padding:11px 12px;margin:8px 0;background:#09101b;border:1px solid #1e2b3e;border-radius:10px;font-family:ui-monospace,monospace}.weak{color:#ffbd70}.medium{color:#ffe27a}.strong{color:#7ee2a8}
+.note{margin-top:18px;padding:12px;border-radius:10px;background:#111c2c;color:#aebbd0;font-size:13px;line-height:1.5}
+</style></head>
+<body><main><div class="card">
+<span class="safe">SAFE SIMULATOR • FICTIONAL DATA ONLY</span>
+<h1>Password Security Lab</h1><div class="sub">See why passwords based on personal information can be predictable.</div>
+<div class="grid"><div><label>Fictional name</label><input id="name" placeholder="Alex Morgan"></div><div><label>Fictional date of birth</label><input id="dob" type="date"></div></div>
+<button id="go">Generate example passwords</button><div id="out"></div>
+<div class="note">This app generates examples locally from the fictional details you enter. It does not test, submit, or attack any account or website.</div>
+</div></main>
+<script>
+const out=document.getElementById('out');
+function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+document.getElementById('go').onclick=()=>{
+ const name=document.getElementById('name').value.trim(), dob=document.getElementById('dob').value;
+ if(!name||!dob){out.innerHTML='<p class="weak">Enter both fictional fields.</p>';return}
+ const parts=name.toLowerCase().split(/\s+/).filter(Boolean), first=parts[0]||'alex', last=parts.at(-1)||'morgan';
+ const [y,m,d]=dob.split('-'); const yy=y.slice(-2);
+ const examples=[first+yy,last+yy,first+d+m,first+'123',first+d+'!',last+m+yy,(first+last).slice(0,12)+yy];
+ out.innerHTML='<h2>Predictability examples</h2>'+examples.map((p,i)=>'<div class="row"><span>'+esc(p)+'</span><span class="'+(i<3?'weak':i<6?'medium':'strong')+'">'+(i<3?'WEAK':i<6?'MEDIUM':'STRONGER')+'</span></div>').join('')+
+ '<p class="note">The point is educational: names and birthdays are easy-to-guess ingredients. For real accounts, use a unique random password and a password manager.</p>';
+};
+</script></body></html>
