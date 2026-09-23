@@ -27,7 +27,7 @@ function generate(count,type,chaos,seed,profile){
  const r=rng(seed),set=new Set(),pr=profile||{};
  const terms=profileTerms(pr), first=(pr.first||'alex').replace(/[^a-z0-9]/gi,''), last=(pr.last||'morgan').replace(/[^a-z0-9]/gi,'');
  let dobYear='',dobMonth='',dobDay='';
- if(/^\\d{4}-\\d{2}-\\d{2}$/.test(pr.dob||'')){
+ if(/^\d{4}-\d{2}-\d{2}$/.test(pr.dob||'')){
    const parts=pr.dob.split('-'); dobYear=parts[0]; dobMonth=parts[1]; dobDay=parts[2];
  }
  const datePieces=[dobYear,dobYear.slice(-2),dobMonth,dobDay,dobMonth+dobDay,dobDay+dobMonth,dobMonth+dobDay+dobYear.slice(-2),dobDay+dobMonth+dobYear.slice(-2)].filter(Boolean);
@@ -78,12 +78,12 @@ go.addEventListener('click',function(){
       const type=document.getElementById('type').value;
       const chaos=document.getElementById('chaos').checked;
       const profile={favorite:document.getElementById('favorite').value.trim(),nickname:document.getElementById('nickname').value.trim(),place:document.getElementById('place').value.trim(),hobby:document.getElementById('hobby').value.trim(),animal:document.getElementById('animal').value.trim(),game:document.getElementById('game').value.trim(),team:document.getElementById('team').value.trim(),music:document.getElementById('music').value.trim(),importantYear:document.getElementById('importantYear').value.trim(),dob:dob};
-      profile.first=name.split(/\s+/)[0]||'alex'; profile.last=name.split(/\s+/).at(-1)||'morgan'; const arr=generate(count,type,chaos,hash(name+'|'+JSON.stringify(profile)),profile); const mode=document.getElementById('sort').value;
+      profile.first=name.split(/\s+/)[0]||'alex'; profile.last=name.split(/\s+/).at(-1)||'morgan'; const terms=profileTerms(profile); const arr=generate(count,type,chaos,hash(name+'|'+JSON.stringify(profile)),profile); const mode=document.getElementById('sort').value;
       const rank={'BRUH':0,'WEAK':1,'MEDIUM':2,'STRONG':3,'VERY STRONG':4,'UNGUESSABLE*':5};
       arr.sort(function(a,b){
         if(mode==='ai-likely')return aiPatternScore(b,profile.first,profile.last,y,m,d,terms)-aiPatternScore(a,profile.first,profile.last,y,m,d,terms);
         if(mode==='strength-desc')return rank[analyze(b,profile.first,profile.last,y,m,d,terms)[0]]-rank[analyze(a,profile.first,profile.last,y,m,d,terms)[0]];
-        if(mode==='strength-asc')return rank[analyze(a,'','','','','')[0]]-rank[analyze(b,'','','','','')[0]];
+        if(mode==='strength-asc')return rank[analyze(a,profile.first,profile.last,y,m,d,terms)[0]]-rank[analyze(b,profile.first,profile.last,y,m,d,terms)[0]];
         if(mode==='length-desc')return b.length-a.length;
         if(mode==='length-asc')return a.length-b.length;
         if(mode==='az')return a.localeCompare(b);
@@ -93,7 +93,7 @@ go.addEventListener('click',function(){
       const exposure=personalRisk(profile);
       const counts={BRUH:0,WEAK:0,MEDIUM:0,STRONG:0,'VERY STRONG':0,'UNGUESSABLE*':0};
       arr.forEach(function(p){counts[analyze(p,'','','','','')[0]]++;});
-      out.innerHTML='<div class="riskbox"><b>PERSONAL-INFO RISK: '+(exposure>=60?'HIGH':exposure>=30?'MEDIUM':'LOW')+'</b>Uses fictional profile details to demonstrate which kinds of personal information should be kept out of passwords. This module does not generate targeted guesses.</div><div class="stats"><div class="stat"><b>'+arr.length.toLocaleString()+'</b><span class="muted">generated</span></div><div class="stat"><b>'+counts.BRUH+'</b><span class="muted">BRUH</span></div><div class="stat"><b>'+counts.WEAK+'</b><span class="muted">WEAK</span></div><div class="stat"><b>'+counts.MEDIUM+'</b><span class="muted">MEDIUM</span></div><div class="stat"><b>'+counts.STRONG+'</b><span class="muted">STRONG</span></div><div class="stat"><b>'+counts['VERY STRONG']+'</b><span class="muted">VERY STRONG</span></div><div class="stat"><b>'+counts['UNGUESSABLE*']+'</b><span class="muted">UNGUESSABLE*</span></div></div><h2>SECURITY ANALYSIS // '+arr.length.toLocaleString()+' RECORDS</h2><div class="list">'+arr.map(function(p){const a=analyze(p,'','','','',''),terms=profileTerms(profile),hits=terms.filter(t=>p.toLowerCase().replace(/[^a-z0-9]/g,'').includes(t)).length,sc=Math.min(99,Math.max(0,aiPatternScore(p,'','','','','')+hits*18));return '<div class="row"><span class="p">'+esc(p)+'</span><span><span class="badge ai">AI '+sc+'%</span> <span class="badge strength '+a[1]+'">'+a[0]+'</span></span></div>';}).join('')+'</div><p class="note">Showing '+arr.length.toLocaleString()+' results. AI-style score is calculated locally from password-pattern signals; this is not a real-world password prediction. Personal-info risk is an educational warning, not a password-guessing system.</p>';
+      out.innerHTML='<div class="riskbox"><b>PERSONAL-INFO RISK: '+(exposure>=60?'HIGH':exposure>=30?'MEDIUM':'LOW')+'</b>Uses fictional profile details to demonstrate which kinds of personal information should be kept out of passwords. This module does not generate targeted guesses.</div><div class="stats"><div class="stat"><b>'+arr.length.toLocaleString()+'</b><span class="muted">generated</span></div><div class="stat"><b>'+counts.BRUH+'</b><span class="muted">BRUH</span></div><div class="stat"><b>'+counts.WEAK+'</b><span class="muted">WEAK</span></div><div class="stat"><b>'+counts.MEDIUM+'</b><span class="muted">MEDIUM</span></div><div class="stat"><b>'+counts.STRONG+'</b><span class="muted">STRONG</span></div><div class="stat"><b>'+counts['VERY STRONG']+'</b><span class="muted">VERY STRONG</span></div><div class="stat"><b>'+counts['UNGUESSABLE*']+'</b><span class="muted">UNGUESSABLE*</span></div></div><h2>SECURITY ANALYSIS // '+arr.length.toLocaleString()+' RECORDS</h2><div class="list">'+arr.map(function(p){const a=analyze(p,'','','','',''),terms=profileTerms(profile),hits=terms.filter(t=>p.toLowerCase().replace(/[^a-z0-9]/g,'').includes(t)).length,sc=Math.min(99,Math.max(0,aiPatternScore(p,'','','','','')+hits*18));return '<div class="row" data-ai="'+sc+'" data-order="'+arr.indexOf(p)+'"><span class="p">'+esc(p)+'</span><span><span class="badge ai">AI '+sc+'%</span> <span class="badge strength '+a[1]+'">'+a[0]+'</span></span></div>';}).join('')+'</div><p class="note">Showing '+arr.length.toLocaleString()+' results. AI-style score is calculated locally from password-pattern signals; this is not a real-world password prediction. Personal-info risk is an educational warning, not a password-guessing system.</p>';
       go.disabled=false;
     }
   },100);
