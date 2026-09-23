@@ -34,7 +34,7 @@ h2{font-size:16px;font-weight:650;color:#dbe1e9;margin:20px 0 10px}
 .badge{padding:3px 7px;border:1px solid #303946;background:#eef2f6;color:#8f9aaa;border-radius:5px;font-size:9px}.ai{color:#526173}
 .weak{color:#b64c58}.medium{color:#9a761d}.strong{color:#2c8054}.bruh{color:#b64c58;font-weight:700}.unpredictable{color:#c4ccd7;font-weight:700}
 .loader{margin-top:20px;padding:17px;border:1px solid #d5dce5;border-radius:9px;background:#f5f7fa}.terminal{min-height:24px;color:#526173;font-size:12px}.bar{height:5px;background:#dbe2ea;overflow:hidden;border-radius:5px;margin:13px 0 8px}.fill{height:100%;width:0;background:#51677e}.percent{color:#1d2632;font-size:17px;font-weight:650}.funny{margin-top:7px;color:#718096;font-size:10px}.note{margin-top:12px;color:#718096;font-size:11px}
-</style>
+.date-wrap{position:relative}.date-wrap input{width:100%;box-sizing:border-box;padding-right:42px}.cal-icon{position:absolute;right:13px;top:50%;transform:translateY(-50%);color:#3976b7;font-size:17px;pointer-events:none}.date-wrap input::-webkit-calendar-picker-indicator{opacity:1;cursor:pointer;filter:none}h1{color:#244f7c}h2{color:#315f8c}label{color:#416b93}button{background:#3976b7!important;box-shadow:0 6px 16px rgba(57,118,183,.22)!important}button:hover{background:#2f679f!important}.card:before{background:linear-gradient(90deg,#3976b7,#5d94cf,#65a99a)!important}</style>
 </head>
 <body>
 <main>
@@ -53,7 +53,7 @@ h2{font-size:16px;font-weight:650;color:#dbe1e9;margin:20px 0 10px}
         </div>
         <div>
           <label for="dob">Fictional date of birth</label>
-          <input id="dob" type="date" aria-label="Date of birth">
+          <div class="date-wrap"><input id="dob" type="date" aria-label="Date of birth"><span class="cal-icon">▣</span></div>
         </div>
         <div>
           <label for="type">Pattern type</label>
