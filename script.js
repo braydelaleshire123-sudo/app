@@ -1,3 +1,4 @@
+window.addEventListener('DOMContentLoaded',function(){
 
 const out=document.getElementById('out'),go=document.getElementById('go');
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -64,3 +65,5 @@ go.addEventListener('click',function(){
 });
 
 document.getElementById('sort').addEventListener('change',()=>{const list=document.querySelector('.list');if(!list)return;const rows=[...list.querySelectorAll('.row')];sortRows(rows,document.getElementById('sort').value);rows.forEach(row=>list.appendChild(row));const note=document.querySelector('#out > .note');if(note)note.innerHTML='Showing '+rows.length.toLocaleString()+' results. Sorted by '+esc(document.getElementById('sort').selectedOptions[0].text)+'. AI score is a fictional local heuristic.';});
+
+});
