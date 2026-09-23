@@ -5,38 +5,51 @@
 <title>Password Security Lab</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#070b12;color:#e8f0ff;font-family:Inter,system-ui,sans-serif;min-height:100vh}
-main{max-width:980px;margin:auto;padding:34px 18px}.card{background:#0e1522;border:1px solid #26344a;border-radius:18px;padding:24px;box-shadow:0 18px 50px #0008}
+main{max-width:1000px;margin:auto;padding:34px 18px}.card{background:#0e1522;border:1px solid #26344a;border-radius:18px;padding:24px;box-shadow:0 18px 50px #0008}
 h1{margin:0 0 8px;font-size:32px}.sub{color:#9eacc0;margin-bottom:20px}.safe{display:inline-block;color:#7ee2a8;background:#123322;border:1px solid #245f3c;padding:6px 10px;border-radius:999px;font-size:13px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:650px){.grid{grid-template-columns:1fr}}
+.grid,.controls{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:650px){.grid,.controls{grid-template-columns:1fr}}
 label{display:block;font-size:13px;color:#aebbd0;margin-bottom:6px}input,select{width:100%;padding:13px;border-radius:10px;border:1px solid #30415a;background:#080e18;color:white;font-size:16px}
-.controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.controls label{margin:0}
+.controls{margin-top:14px}.check{display:flex;align-items:center;gap:8px;margin-top:12px;color:#aebbd0;font-size:13px}.check input{width:auto}
 button{margin-top:18px;width:100%;padding:13px;border:0;border-radius:10px;background:#4d8dff;color:white;font-weight:700;font-size:16px;cursor:pointer}button:hover{filter:brightness(1.1)}
 .stats{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}.stat{background:#09101b;border:1px solid #1e2b3e;border-radius:10px;padding:10px 14px}.stat b{display:block;font-size:20px}.muted{color:#8e9cb0;font-size:12px}
-#out{margin-top:22px}.list{max-height:500px;overflow:auto}.row{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;margin:6px 0;background:#09101b;border:1px solid #1e2b3e;border-radius:10px;font-family:ui-monospace,monospace}.weak{color:#ffbd70}.medium{color:#ffe27a}.strong{color:#7ee2a8}
+#out{margin-top:22px}.list{max-height:500px;overflow:auto}.row{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;margin:6px 0;background:#09101b;border:1px solid #1e2b3e;border-radius:10px;font-family:ui-monospace,monospace}.weak{color:#ffbd70}.medium{color:#ffe27a}.strong{color:#7ee2a8}.bruh{color:#ff6b6b;font-weight:800}.unpredictable{color:#b995ff;font-weight:800}
+.badge{padding:3px 8px;border-radius:999px;background:#172338;font-size:12px;white-space:nowrap}
 .note{margin-top:18px;padding:12px;border-radius:10px;background:#111c2c;color:#aebbd0;font-size:13px;line-height:1.5}
 </style></head>
 <body><main><div class="card">
 <span class="safe">SAFE SIMULATOR • FICTIONAL DATA ONLY</span>
 <h1>Password Security Lab</h1>
-<div class="sub">A local pattern engine demonstrates why personal information can make passwords predictable.</div>
+<div class="sub">Advanced local pattern analysis for fictional characters.</div>
 <div class="grid">
 <div><label>Fictional name</label><input id="name" placeholder="Alex Morgan"></div>
 <div><label>Fictional date of birth</label><input id="dob" type="date"></div>
 </div>
 <div class="controls">
-<div><label>Pattern type</label><select id="type"><option value="all">All examples</option><option value="numbers">Numbers only</option><option value="words">Words + numbers</option><option value="mixed">Mixed characters</option></select></div>
+<div><label>Pattern type</label><select id="type"><option value="all">All patterns</option><option value="numbers">Numbers only</option><option value="words">Words + numbers</option><option value="mixed">Mixed characters</option></select></div>
 <div><label>How many examples</label><select id="count"><option value="1000">1,000</option><option value="3000" selected>3,000</option><option value="5000">5,000</option></select></div>
 </div>
-<button id="go">Generate examples</button>
+<label class="check"><input id="chaos" type="checkbox" checked> Include advanced random-looking patterns</label>
+<button id="go">RUN ADVANCED SIMULATION</button>
 <div id="out"></div>
-<div class="note">For fictional characters only. Everything runs in your browser: nothing is uploaded, tested against an account, or sent to a website. This is an educational predictability simulator, not a password-cracking tool.</div>
+<div class="note">Fictional characters only. Everything runs locally in your browser and is never submitted to an account or website. “Unpredictable” here means the simulator could not find obvious personal-information patterns; it is not a guarantee of real-world security.</div>
 </div></main>
 <script>
 const out=document.getElementById('out');
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
 function rng(seed){return()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296}}
-function score(p){let n=p.length+(new Set(p).size*0.45);if(/[A-Z]/.test(p))n+=2;if(/[a-z]/.test(p))n+=2;if(/\d/.test(p))n+=2;if(/[^A-Za-z0-9]/.test(p))n+=2;return n<10?'WEAK':n<16?'MEDIUM':'STRONGER'}
+function analyze(p,first,last,y,m,d){
+ let obvious=0;
+ const low=p.toLowerCase(), personal=[first,last,String(y),String(y).slice(-2),String(m).padStart(2,'0'),String(d).padStart(2,'0')];
+ personal.forEach(x=>{if(x.length>1&&low.includes(x))obvious++});
+ const unique=new Set(p).size, variety=(/[a-z]/.test(p)?1:0)+(/[A-Z]/.test(p)?1:0)+(/[0-9]/.test(p)?1:0)+(/[^A-Za-z0-9]/.test(p)?1:0);
+ if(obvious>=2||p.length<7)return ['BRUH','bruh'];
+ if(obvious===1)return ['WEAK','weak'];
+ if(p.length<10||variety<2)return ['MEDIUM','medium'];
+ if(p.length<13||unique<8||variety<3)return ['STRONG','strong'];
+ if(p.length>=16&&variety>=3&&unique>=10)return ['UNGUESSABLE*','unpredictable'];
+ return ['VERY STRONG','strong'];
+}
 function numeric(r,y,m,d,i){
  const patterns=[String(y),String(y).slice(-2)+String(m).padStart(2,'0')+String(d).padStart(2,'0'),
  String(m).padStart(2,'0')+String(d).padStart(2,'0')+String(y).slice(-2),
@@ -45,26 +58,29 @@ function numeric(r,y,m,d,i){
  String((i*37)%1000000).padStart(6,'0')];
  return patterns[i%patterns.length]
 }
+const letters='abcdefghijklmnopqrstuvwxyz',symbols='!@#$%^&*_+=?';
+function randomish(r,n,withSymbols){
+ let p='';for(let i=0;i<n;i++){let q=r();if(q<.42)p+=letters[Math.floor(r()*26)];else if(q<.78)p+=letters[Math.floor(r()*26)].toUpperCase();else if(q<.93)p+=Math.floor(r()*10);else if(withSymbols)p+=symbols[Math.floor(r()*symbols.length)];else p+=Math.floor(r()*10)}return p;
+}
 document.getElementById('go').onclick=()=>{
- const name=document.getElementById('name').value.trim(), dob=document.getElementById('dob').value;
+ const name=document.getElementById('name').value.trim(),dob=document.getElementById('dob').value;
  if(!name||!dob){out.innerHTML='<p class="weak">Enter both fictional fields.</p>';return}
  const parts=name.toLowerCase().split(/\s+/).filter(Boolean),first=parts[0]||'alex',last=parts.at(-1)||'morgan';
- const [y,m,d]=dob.split('-').map(Number), yy=String(y).slice(-2), seed=hash(name+'|'+dob), r=rng(seed);
- const type=document.getElementById('type').value,count=Number(document.getElementById('count').value), set=new Set(), base=[first,last,first+last,last+first];
- const suffix=['123','1234','1','01','12','21',yy,String(y),String(m).padStart(2,'0'),String(d).padStart(2,'0')];
+ const [y,m,d]=dob.split('-').map(Number),seed=hash(name+'|'+dob),r=rng(seed),type=document.getElementById('type').value,count=Number(document.getElementById('count').value),chaos=document.getElementById('chaos').checked;
+ const set=new Set(),base=[first,last,first+last,last+first],suffix=['123','1234','1','01','12','21',String(y).slice(-2),String(y),String(m).padStart(2,'0'),String(d).padStart(2,'0')];
  let guard=0;
- while(set.size<count && guard<count*8){guard++;let p='';
-   if(type==='numbers'||(type==='all'&&r()<.28)) p=numeric(r,y,m,d,guard);
-   else {let w=base[Math.floor(r()*base.length)],s=suffix[Math.floor(r()*suffix.length)];
-     if(type==='mixed'||(type==='all'&&r()<.35)){const sym=['!','@','#','$','_'][Math.floor(r()*5)];p=w+s+sym}
-     else p=w+s;
-     if(r()<.22)p=p.charAt(0).toUpperCase()+p.slice(1);
-     if(r()<.12)p+=String(Math.floor(r()*90)+10);
-   }
-   set.add(p);
+ while(set.size<count&&guard<count*10){guard++;let p='';
+   if(type==='numbers'||(type==='all'&&r()<.25))p=numeric(r,y,m,d,guard);
+   else if(chaos&&(type==='mixed'||type==='all')&&r()<.20)p=randomish(r,16+rndLen(r,6),true);
+   else{let w=base[Math.floor(r()*base.length)],s=suffix[Math.floor(r()*suffix.length)];p=w+s;
+     if(type==='mixed'||(type==='all'&&r()<.35))p+=symbols[Math.floor(r()*symbols.length)];
+     if(r()<.25)p=p[0].toUpperCase()+p.slice(1);if(r()<.15)p+=Math.floor(r()*90+10)}
+   if(type==='words'&&!/[A-Za-z]/.test(p))continue;
+   set.add(p)
  }
- const arr=[...set];
- const shown=arr.slice(0,Math.min(200,arr.length));
- out.innerHTML='<div class="stats"><div class="stat"><b>'+arr.length.toLocaleString()+'</b><span class="muted">generated locally</span></div><div class="stat"><b>'+arr.filter(x=>score(x)==='WEAK').length.toLocaleString()+'</b><span class="muted">weak examples</span></div><div class="stat"><b>'+arr.filter(x=>/^\d+$/.test(x)).length.toLocaleString()+'</b><span class="muted">numeric-only</span></div></div><h2>Example patterns</h2><div class="list">'+shown.map(p=>'<div class="row"><span>'+esc(p)+'</span><span class="'+score(p).toLowerCase()+'">'+score(p)+'</span></div>').join('')+'</div><p class="note">Showing the first '+shown.length+' of '+arr.length.toLocaleString()+' generated examples. The simulator uses a local pattern engine rather than an online AI service, so your fictional data stays in the browser.</p>';
+ const arr=[...set],shown=arr.slice(0,200),labels=arr.map(x=>analyze(x,first,last,y,m,d)[0]);
+ const counts={BRUH:0,WEAK:0,MEDIUM:0,STRONG:0,'VERY STRONG':0,'UNGUESSABLE*':0};labels.forEach(x=>counts[x]++);
+ out.innerHTML='<div class="stats"><div class="stat"><b>'+arr.length.toLocaleString()+'</b><span class="muted">generated</span></div><div class="stat"><b>'+counts.BRUH+'</b><span class="muted">BRUH 💀</span></div><div class="stat"><b>'+counts.STRONG+'</b><span class="muted">strong</span></div><div class="stat"><b>'+counts['UNGUESSABLE*']+'</b><span class="muted">UNGUESSABLE*</span></div></div><h2>Advanced results</h2><div class="list">'+shown.map(p=>{let a=analyze(p,first,last,y,m,d);return '<div class="row"><span>'+esc(p)+'</span><span class="badge '+a[1]+'">'+a[0]+'</span></div>'}).join('')+'</div><p class="note">Showing '+shown.length+' of '+arr.length.toLocaleString()+' results. *“UNGUESSABLE” is a simulator label, not a security guarantee. For real accounts, use a unique randomly generated password and MFA.</p>';
 };
+function rndLen(r,n){return Math.floor(r()*n)}
 </script></body></html>
