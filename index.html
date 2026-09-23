@@ -69,11 +69,13 @@ function generate(name,dob){
  const parts=name.toLowerCase().split(/\s+/).filter(Boolean),first=parts[0]||'alex',last=parts.at(-1)||'morgan';
  const [y,m,d]=dob.split('-').map(Number),seed=hash(name+'|'+dob),r=rng(seed),type=document.getElementById('type').value,count=Number(document.getElementById('count').value),chaos=document.getElementById('chaos').checked;
  const set=new Set(),base=[first,last,first+last,last+first],suffix=['123','1234','1','01','12','21',String(y).slice(-2),String(y),String(m).padStart(2,'0'),String(d).padStart(2,'0')];let guard=0;
- while(set.size<count&&guard<count*10){guard++;let p='';
+ while(set.size<count){guard++;let p='';
   if(type==='numbers'||(type==='all'&&r()<.25))p=numeric(r,y,m,d,guard);
   else if(chaos&&(type==='mixed'||type==='all')&&r()<.32)p=advancedPattern(r,first,last,y,m,d);
   else{let w=base[Math.floor(r()*base.length)],s=suffix[Math.floor(r()*suffix.length)];p=w+s;if(type==='mixed'||(type==='all'&&r()<.35))p+=symbols[Math.floor(r()*symbols.length)];if(r()<.25)p=p[0].toUpperCase()+p.slice(1);if(r()<.15)p+=Math.floor(r()*90+10)}
-  if(type==='words'&&!/[A-Za-z]/.test(p))continue;set.add(p)
+  if(type==='words'&&!/[A-Za-z]/.test(p))continue;
+  if(set.has(p)){const n=guard.toString(36); if(type==='numbers') p=(guard%100000000).toString().padStart(8,'0'); else if(type==='words') p=first+n; else p=first+n+'!'+(guard%1000);}
+  set.add(p)
  }
  return {arr:[...set],first,last,y,m,d}
 }
