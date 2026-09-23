@@ -31,31 +31,31 @@ function generate(count,type,chaos,seed,profile){
  const exactDateExamples=[dobYear,dobYear+dobMonth+dobDay,dobMonth+dobDay+dobYear.slice(-2),dobDay+dobMonth+dobYear.slice(-2)].filter(Boolean);
  const favNum=String(pr.favoriteNumber||'').replace(/\D/g,'');
  const favVariants=favNum?[favNum,favNum+favNum.slice(-2),favNum+'0',favNum+'1'].filter((v,i,a)=>v&&a.indexOf(v)===i):[];
+ const color=(pr.favoriteColor||'').toLowerCase().replace(/[^a-z0-9]/g,'');
  const profileNumberExamples=[...new Set([...exactDateExamples,...favVariants])];
+ const profileWordExamples=[...new Set([...terms,color].filter(v=>v&&v.length>2))];
  while(set.size<count){
   let p='';
+  const bucket=set.size%8;
   if(type==='numbers'){
-    if(profileNumberExamples.length && set.size<Math.min(12,count)) p=profileNumberExamples[set.size%profileNumberExamples.length];
-    else if(profileNumberExamples.length && r()<0.6) p=datePieces[Math.floor(r()*datePieces.length)]||favNum;
-    else if(favNum && r()<0.35) p=favVariants[Math.floor(r()*favVariants.length)];
-    else if(chaos) p=String(Math.floor(r()*90000000)+10000000);
-    else p=datePieces.length?datePieces[(set.size)%datePieces.length]:(favNum||String((set.size+1)*111111));
-  } else if((type==='words'||type==='mixed'||type==='all') && terms.length && r()<0.42){
-    const a=terms[Math.floor(r()*terms.length)],b=terms.length>1?terms[Math.floor(r()*terms.length)]:first;
-    const numberChoice=favNum && r()<0.45?favNum:(datePieces.length&&r()<0.7?datePieces[Math.floor(r()*datePieces.length)]:(Math.floor(r()*90)+10).toString());
-    const join=r()<0.45?'':(r()<0.5?'_':'');
-    p=a+join+b+numberChoice;
-    if(r()<0.35)p=p[0].toUpperCase()+p.slice(1);
-    if(r()<0.18)p+='!';
+    if(profileNumberExamples.length && bucket<2) p=profileNumberExamples[set.size%profileNumberExamples.length];
+    else if(bucket===2 && datePieces.length) p=datePieces[set.size%datePieces.length];
+    else if(bucket===3 && favNum) p=favVariants[set.size%favVariants.length];
+    else if(chaos || bucket>=6) p=String(Math.floor(r()*90000000)+10000000);
+    else p=String(10+Math.floor(r()*90));
+  } else if((type==='words'||type==='mixed'||type==='all') && profileWordExamples.length && bucket<3){
+    const a=profileWordExamples[set.size%profileWordExamples.length],b=profileWordExamples[(set.size+1)%profileWordExamples.length]||first;
+    const numberChoice=favNum&&bucket===2?favNum:(datePieces.length&&bucket===1?datePieces[set.size%datePieces.length]:(10+Math.floor(r()*90)).toString());
+    p=a+(bucket===0?'':bucket===1?'_':'')+b+numberChoice;
+    if(bucket===0)p=p[0].toUpperCase()+p.slice(1);
+    if(bucket===2)p+='!';
   } else if(type==='words'){
-    p=randomish(r,5+Math.floor(r()*5),false)+'-'+randomish(r,3,false);
+    p=randomish(r,4+Math.floor(r()*4),false)+'-'+randomish(r,3,false);
   } else {
-    const len=chaos?14+Math.floor(r()*10):10+Math.floor(r()*7);
+    const len=bucket<2?8+Math.floor(r()*3):bucket<5?11+Math.floor(r()*5):16+Math.floor(r()*8);
     p=randomish(r,len,type==='mixed'||type==='all');
-    if(type==='mixed'||type==='all'){
-      if(r()<0.45 && terms.length)p=terms[Math.floor(r()*terms.length)]+(r()<0.5?'_':'')+(favNum&&r()<0.45?favNum:Math.floor(r()*90+10));
-      if(r()<0.3 && datePieces.length)p+=datePieces[Math.floor(r()*datePieces.length)];
-    }
+    if((type==='mixed'||type==='all')&&bucket===1&&profileWordExamples.length)p=profileWordExamples[set.size%profileWordExamples.length]+'_'+(favNum||String(10+Math.floor(r()*90)));
+    if((type==='mixed'||type==='all')&&bucket===2&&datePieces.length)p+=datePieces[set.size%datePieces.length]+'!';
   }
   if(p.length>=6)set.add(p);
  }
