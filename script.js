@@ -47,7 +47,7 @@ function generate(count,type,chaos,seed,profile){
    let p='';for(let j=0;j<20;j++)p+=mixedChars[(i*11+j*5)%mixedChars.length];return p;
  }
  let safety=0; while(set.size<count && safety++<count*20){
-   const i=set.size;
+   const i=safety-1;
    let p='';
    if(type==='numbers'){
      if(profileNumberExamples.length && i%4<2)p=profileNumberExamples[i%profileNumberExamples.length];
@@ -85,7 +85,7 @@ go.addEventListener('click',function(){
   if(fill)fill.style.width=(progress*100)+'%';if(pct)pct.textContent=Math.floor(progress*100)+'%';if(term)term.textContent=stages[idx];
   if(progress>=1){
    clearInterval(timer);
-   const requestedCount=Math.min(Math.max(Number(document.getElementById('count').value)||100,1),500),type=document.getElementById('type').value,chaos=document.getElementById('chaos').checked;
+   const requestedCount=Math.min(Math.max(Number(document.getElementById('count').value)||50,1),500),type=document.getElementById('type').value,chaos=document.getElementById('chaos').checked;
    const profile={favorite:document.getElementById('favorite').value.trim(),favoriteNumber:document.getElementById('favoriteNumber').value.trim(),favoriteColor:document.getElementById('favoriteColor').value.trim(),nickname:document.getElementById('nickname').value.trim(),place:document.getElementById('place').value.trim(),hobby:document.getElementById('hobby').value.trim(),animal:document.getElementById('animal').value.trim(),game:document.getElementById('game').value.trim(),team:document.getElementById('team').value.trim(),music:document.getElementById('music').value.trim(),importantYear:document.getElementById('importantYear').value.trim(),dob:dob};
    profile.first=name.split(/\s+/)[0]||'alex';profile.last=name.split(/\s+/).at(-1)||'morgan';const terms=profileTerms(profile),arr=generate(requestedCount,type,chaos,hash(name+'|'+JSON.stringify(profile)),profile),mode=document.getElementById('sort').value;
    const rank={'BRUH':0,'WEAK':1,'MEDIUM':2,'STRONG':3,'VERY STRONG':4,'UNGUESSABLE*':5};
