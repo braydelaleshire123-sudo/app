@@ -5,31 +5,66 @@
 <title>Password Security Lab</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#070b12;color:#e8f0ff;font-family:Inter,system-ui,sans-serif;min-height:100vh}
-main{max-width:900px;margin:auto;padding:34px 18px}.card{background:#0e1522;border:1px solid #26344a;border-radius:18px;padding:24px;box-shadow:0 18px 50px #0008}
-h1{margin:0 0 8px;font-size:32px}.sub{color:#9eacc0;margin-bottom:25px}.safe{display:inline-block;color:#7ee2a8;background:#123322;border:1px solid #245f3c;padding:6px 10px;border-radius:999px;font-size:13px}
+main{max-width:980px;margin:auto;padding:34px 18px}.card{background:#0e1522;border:1px solid #26344a;border-radius:18px;padding:24px;box-shadow:0 18px 50px #0008}
+h1{margin:0 0 8px;font-size:32px}.sub{color:#9eacc0;margin-bottom:20px}.safe{display:inline-block;color:#7ee2a8;background:#123322;border:1px solid #245f3c;padding:6px 10px;border-radius:999px;font-size:13px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:650px){.grid{grid-template-columns:1fr}}
-label{display:block;font-size:13px;color:#aebbd0;margin-bottom:6px}input{width:100%;padding:13px;border-radius:10px;border:1px solid #30415a;background:#080e18;color:white;font-size:16px}
+label{display:block;font-size:13px;color:#aebbd0;margin-bottom:6px}input,select{width:100%;padding:13px;border-radius:10px;border:1px solid #30415a;background:#080e18;color:white;font-size:16px}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.controls label{margin:0}
 button{margin-top:18px;width:100%;padding:13px;border:0;border-radius:10px;background:#4d8dff;color:white;font-weight:700;font-size:16px;cursor:pointer}button:hover{filter:brightness(1.1)}
-#out{margin-top:22px}.row{display:flex;justify-content:space-between;gap:12px;padding:11px 12px;margin:8px 0;background:#09101b;border:1px solid #1e2b3e;border-radius:10px;font-family:ui-monospace,monospace}.weak{color:#ffbd70}.medium{color:#ffe27a}.strong{color:#7ee2a8}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}.stat{background:#09101b;border:1px solid #1e2b3e;border-radius:10px;padding:10px 14px}.stat b{display:block;font-size:20px}.muted{color:#8e9cb0;font-size:12px}
+#out{margin-top:22px}.list{max-height:500px;overflow:auto}.row{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;margin:6px 0;background:#09101b;border:1px solid #1e2b3e;border-radius:10px;font-family:ui-monospace,monospace}.weak{color:#ffbd70}.medium{color:#ffe27a}.strong{color:#7ee2a8}
 .note{margin-top:18px;padding:12px;border-radius:10px;background:#111c2c;color:#aebbd0;font-size:13px;line-height:1.5}
 </style></head>
 <body><main><div class="card">
 <span class="safe">SAFE SIMULATOR • FICTIONAL DATA ONLY</span>
-<h1>Password Security Lab</h1><div class="sub">See why passwords based on personal information can be predictable.</div>
-<div class="grid"><div><label>Fictional name</label><input id="name" placeholder="Alex Morgan"></div><div><label>Fictional date of birth</label><input id="dob" type="date"></div></div>
-<button id="go">Generate example passwords</button><div id="out"></div>
-<div class="note">This app generates examples locally from the fictional details you enter. It does not test, submit, or attack any account or website.</div>
+<h1>Password Security Lab</h1>
+<div class="sub">A local pattern engine demonstrates why personal information can make passwords predictable.</div>
+<div class="grid">
+<div><label>Fictional name</label><input id="name" placeholder="Alex Morgan"></div>
+<div><label>Fictional date of birth</label><input id="dob" type="date"></div>
+</div>
+<div class="controls">
+<div><label>Pattern type</label><select id="type"><option value="all">All examples</option><option value="numbers">Numbers only</option><option value="words">Words + numbers</option><option value="mixed">Mixed characters</option></select></div>
+<div><label>How many examples</label><select id="count"><option value="1000">1,000</option><option value="3000" selected>3,000</option><option value="5000">5,000</option></select></div>
+</div>
+<button id="go">Generate examples</button>
+<div id="out"></div>
+<div class="note">For fictional characters only. Everything runs in your browser: nothing is uploaded, tested against an account, or sent to a website. This is an educational predictability simulator, not a password-cracking tool.</div>
 </div></main>
 <script>
 const out=document.getElementById('out');
-function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function rng(seed){return()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296}}
+function score(p){let n=p.length+(new Set(p).size*0.45);if(/[A-Z]/.test(p))n+=2;if(/[a-z]/.test(p))n+=2;if(/\d/.test(p))n+=2;if(/[^A-Za-z0-9]/.test(p))n+=2;return n<10?'WEAK':n<16?'MEDIUM':'STRONGER'}
+function numeric(r,y,m,d,i){
+ const patterns=[String(y),String(y).slice(-2)+String(m).padStart(2,'0')+String(d).padStart(2,'0'),
+ String(m).padStart(2,'0')+String(d).padStart(2,'0')+String(y).slice(-2),
+ String(d).padStart(2,'0')+String(m).padStart(2,'0')+String(y),
+ String(Math.floor(r()*900000)+100000),String(Math.floor(r()*90000000)+10000000),
+ String((i*37)%1000000).padStart(6,'0')];
+ return patterns[i%patterns.length]
+}
 document.getElementById('go').onclick=()=>{
  const name=document.getElementById('name').value.trim(), dob=document.getElementById('dob').value;
  if(!name||!dob){out.innerHTML='<p class="weak">Enter both fictional fields.</p>';return}
- const parts=name.toLowerCase().split(/\s+/).filter(Boolean), first=parts[0]||'alex', last=parts.at(-1)||'morgan';
- const [y,m,d]=dob.split('-'); const yy=y.slice(-2);
- const examples=[first+yy,last+yy,first+d+m,first+'123',first+d+'!',last+m+yy,(first+last).slice(0,12)+yy];
- out.innerHTML='<h2>Predictability examples</h2>'+examples.map((p,i)=>'<div class="row"><span>'+esc(p)+'</span><span class="'+(i<3?'weak':i<6?'medium':'strong')+'">'+(i<3?'WEAK':i<6?'MEDIUM':'STRONGER')+'</span></div>').join('')+
- '<p class="note">The point is educational: names and birthdays are easy-to-guess ingredients. For real accounts, use a unique random password and a password manager.</p>';
+ const parts=name.toLowerCase().split(/\s+/).filter(Boolean),first=parts[0]||'alex',last=parts.at(-1)||'morgan';
+ const [y,m,d]=dob.split('-').map(Number), yy=String(y).slice(-2), seed=hash(name+'|'+dob), r=rng(seed);
+ const type=document.getElementById('type').value,count=Number(document.getElementById('count').value), set=new Set(), base=[first,last,first+last,last+first];
+ const suffix=['123','1234','1','01','12','21',yy,String(y),String(m).padStart(2,'0'),String(d).padStart(2,'0')];
+ let guard=0;
+ while(set.size<count && guard<count*8){guard++;let p='';
+   if(type==='numbers'||(type==='all'&&r()<.28)) p=numeric(r,y,m,d,guard);
+   else {let w=base[Math.floor(r()*base.length)],s=suffix[Math.floor(r()*suffix.length)];
+     if(type==='mixed'||(type==='all'&&r()<.35)){const sym=['!','@','#','$','_'][Math.floor(r()*5)];p=w+s+sym}
+     else p=w+s;
+     if(r()<.22)p=p.charAt(0).toUpperCase()+p.slice(1);
+     if(r()<.12)p+=String(Math.floor(r()*90)+10);
+   }
+   set.add(p);
+ }
+ const arr=[...set];
+ const shown=arr.slice(0,Math.min(200,arr.length));
+ out.innerHTML='<div class="stats"><div class="stat"><b>'+arr.length.toLocaleString()+'</b><span class="muted">generated locally</span></div><div class="stat"><b>'+arr.filter(x=>score(x)==='WEAK').length.toLocaleString()+'</b><span class="muted">weak examples</span></div><div class="stat"><b>'+arr.filter(x=>/^\d+$/.test(x)).length.toLocaleString()+'</b><span class="muted">numeric-only</span></div></div><h2>Example patterns</h2><div class="list">'+shown.map(p=>'<div class="row"><span>'+esc(p)+'</span><span class="'+score(p).toLowerCase()+'">'+score(p)+'</span></div>').join('')+'</div><p class="note">Showing the first '+shown.length+' of '+arr.length.toLocaleString()+' generated examples. The simulator uses a local pattern engine rather than an online AI service, so your fictional data stays in the browser.</p>';
 };
 </script></body></html>
