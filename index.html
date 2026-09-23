@@ -81,9 +81,11 @@ function generate(name,dob){
 }
 go.onclick=()=>{
  const name=document.getElementById('name').value.trim(),dob=document.getElementById('dob').value;
- if(!name||!dob){out.innerHTML='<p class="weak">Input valid date.</p>';return}
- const dateParts=dob.split('-').map(Number),validDate=dateParts.length===3&&dateParts.every(Number.isFinite)&&dateParts[0]>=1900&&dateParts[0]<=2026&&dateParts[1]>=1&&dateParts[1]<=12&&dateParts[2]>=1&&dateParts[2]<=31;
- if(!validDate){out.innerHTML='<p class="weak">Input valid date.</p>';return}
+ if(!name){out.innerHTML='<p class="weak">Input name.</p>';return}
+ if(!dob){out.innerHTML='<p class="weak">Input valid date.</p>';return}
+ const dateParts=dob.split('-').map(Number),validDate=dateParts.length===3&&dateParts.every(Number.isFinite);
+ const validCalendarDate=validDate&&dateParts[0]>=1900&&dateParts[0]<=2026&&dateParts[1]>=1&&dateParts[1]<=12&&dateParts[2]>=1&&dateParts[2]<=31&&new Date(dateParts[0],dateParts[1]-1,dateParts[2]).getFullYear()===dateParts[0]&&new Date(dateParts[0],dateParts[1]-1,dateParts[2]).getMonth()===dateParts[1]-1&&new Date(dateParts[0],dateParts[1]-1,dateParts[2]).getDate()===dateParts[2];
+ if(!validCalendarDate){out.innerHTML='<p class="weak">Input valid date.</p>';return}
  go.disabled=true;
  const stages=['Connecting to the totally fictional mainframe...','Hacking the imaginary password matrix...','Bribing the virtual calculator...','Teaching the CPU suspicious math...','Scanning 3,000 fictional patterns...','Asking the pixels nicely...','Running advanced local analysis...','Almost done. Definitely not hacking anything.'];
  const start=performance.now(),duration=15000;
