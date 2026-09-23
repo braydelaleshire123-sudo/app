@@ -23,7 +23,7 @@ const letters='abcdefghijklmnopqrstuvwxyz',symbols='!@#$%^&*_+=?';
 function rndLen(r,n){return Math.floor(r()*n)}
 function randomish(r,n,withSymbols){let p='';for(let i=0;i<n;i++){let q=r();if(q<.42)p+=letters[Math.floor(r()*26)];else if(q<.78)p+=letters[Math.floor(r()*26)].toUpperCase();else if(q<.93)p+=Math.floor(r()*10);else if(withSymbols)p+=symbols[Math.floor(r()*symbols.length)];else p+=Math.floor(r()*10)}return p}
 function generate(count,type,chaos,seed,profile){
- const r=rng(seed),set=new Set(),pr=profile||{}; count=Math.min(Math.max(Number(count)||100,1),500);
+ const r=rng(seed),set=new Set(),pr=profile||{}; count=1;
  const terms=profileTerms(pr), first=(pr.first||'alex').replace(/[^a-z0-9]/gi,''), last=(pr.last||'morgan').replace(/[^a-z0-9]/gi,'');
  let dobYear='',dobMonth='',dobDay='';
  if(/^\\d{4}-\\d{2}-\\d{2}$/.test(pr.dob||'')){const parts=pr.dob.split('-');dobYear=parts[0];dobMonth=parts[1];dobDay=parts[2]}
