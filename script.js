@@ -34,7 +34,8 @@ function generate(count,type,chaos,seed,profile){
  while(set.size<count){
   let p='';
   if(type==='numbers'){
-    if(datePieces.length && r()<0.72) p=datePieces[Math.floor(r()*datePieces.length)];
+    if(datePieces.length && set.size<Math.min(8,count)) p=exactDateExamples[set.size%exactDateExamples.length];
+    else if(datePieces.length && r()<0.72) p=datePieces[Math.floor(r()*datePieces.length)];
     else p=String(Math.floor(r()*90000000)+10000000);
   } else if((type==='words'||type==='mixed'||type==='all') && terms.length && r()<0.65){
     const a=terms[Math.floor(r()*terms.length)], b=terms.length>1?terms[Math.floor(r()*terms.length)]:first;
