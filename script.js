@@ -23,7 +23,7 @@ const letters='abcdefghijklmnopqrstuvwxyz',symbols='!@#$%^&*_+=?';
 function rndLen(r,n){return Math.floor(r()*n)}
 function randomish(r,n,withSymbols){let p='';for(let i=0;i<n;i++){let q=r();if(q<.42)p+=letters[Math.floor(r()*26)];else if(q<.78)p+=letters[Math.floor(r()*26)].toUpperCase();else if(q<.93)p+=Math.floor(r()*10);else if(withSymbols)p+=symbols[Math.floor(r()*symbols.length)];else p+=Math.floor(r()*10)}return p}
 function generate(count,type,chaos,seed,profile){
- const r=rng(seed),set=new Set(),pr=profile||{};
+ const r=rng(seed),set=new Set(),pr=profile||{}; count=Math.min(Math.max(Number(count)||100,1),500);
  const terms=profileTerms(pr), first=(pr.first||'alex').replace(/[^a-z0-9]/gi,''), last=(pr.last||'morgan').replace(/[^a-z0-9]/gi,'');
  let dobYear='',dobMonth='',dobDay='';
  if(/^\\d{4}-\\d{2}-\\d{2}$/.test(pr.dob||'')){const parts=pr.dob.split('-');dobYear=parts[0];dobMonth=parts[1];dobDay=parts[2]}
@@ -77,7 +77,7 @@ go.addEventListener('click',function(){
  if(parts.length!==3||!Number.isFinite(y)||!Number.isFinite(m)||!Number.isFinite(d)||y<1900||y>2026||dt.getFullYear()!==y||dt.getMonth()!==m-1||dt.getDate()!==d){out.innerHTML='<p class="weak">> INPUT ERROR: VALID DATE REQUIRED</p>';return}
  go.disabled=true;
  const stages=['Loading security model...','Analyzing password patterns...','Checking length and character diversity...','Comparing common-pattern signals...','Calculating local AI-style score...','Building security report...','Analysis complete.'];
- const start=Date.now(),duration=15000;
+ const start=Date.now(),duration=3000;
  out.innerHTML='<div class="loader"><div class="terminal" id="term">'+stages[0]+'</div><div class="bar"><div class="fill" id="fill"></div></div><div class="percent" id="pct">0%</div><div class="funny">LOCAL SECURITY MODEL // FICTIONAL DATA</div></div>';
  const timer=setInterval(function(){
   const progress=Math.min(1,(Date.now()-start)/duration),idx=Math.min(stages.length-1,Math.floor(progress*stages.length));
@@ -85,9 +85,9 @@ go.addEventListener('click',function(){
   if(fill)fill.style.width=(progress*100)+'%';if(pct)pct.textContent=Math.floor(progress*100)+'%';if(term)term.textContent=stages[idx];
   if(progress>=1){
    clearInterval(timer);
-   const count=Number(document.getElementById('count').value),type=document.getElementById('type').value,chaos=document.getElementById('chaos').checked;
+   const requestedCount=Math.min(Math.max(Number(document.getElementById('count').value)||100,1),500),type=document.getElementById('type').value,chaos=document.getElementById('chaos').checked;
    const profile={favorite:document.getElementById('favorite').value.trim(),favoriteNumber:document.getElementById('favoriteNumber').value.trim(),favoriteColor:document.getElementById('favoriteColor').value.trim(),nickname:document.getElementById('nickname').value.trim(),place:document.getElementById('place').value.trim(),hobby:document.getElementById('hobby').value.trim(),animal:document.getElementById('animal').value.trim(),game:document.getElementById('game').value.trim(),team:document.getElementById('team').value.trim(),music:document.getElementById('music').value.trim(),importantYear:document.getElementById('importantYear').value.trim(),dob:dob};
-   profile.first=name.split(/\s+/)[0]||'alex';profile.last=name.split(/\s+/).at(-1)||'morgan';const terms=profileTerms(profile),arr=generate(count,type,chaos,hash(name+'|'+JSON.stringify(profile)),profile),mode=document.getElementById('sort').value;
+   profile.first=name.split(/\s+/)[0]||'alex';profile.last=name.split(/\s+/).at(-1)||'morgan';const terms=profileTerms(profile),arr=generate(requestedCount,type,chaos,hash(name+'|'+JSON.stringify(profile)),profile),mode=document.getElementById('sort').value;
    const rank={'BRUH':0,'WEAK':1,'MEDIUM':2,'STRONG':3,'VERY STRONG':4,'UNGUESSABLE*':5};
    arr.sort(function(a,b){if(mode==='ai-likely')return aiPatternScore(b,profile.first,profile.last,y,m,d,terms)-aiPatternScore(a,profile.first,profile.last,y,m,d,terms);if(mode==='strength-desc')return rank[analyze(b,profile.first,profile.last,y,m,d,terms)[0]]-rank[analyze(a,profile.first,profile.last,y,m,d,terms)[0]];if(mode==='strength-asc')return rank[analyze(a,profile.first,profile.last,y,m,d,terms)[0]]-rank[analyze(b,profile.first,profile.last,y,m,d,terms)[0]];if(mode==='length-desc')return b.length-a.length;if(mode==='length-asc')return a.length-b.length;if(mode==='az')return a.localeCompare(b);if(mode==='za')return b.localeCompare(a);return 0});
    const exposure=personalRisk(profile),counts={BRUH:0,WEAK:0,MEDIUM:0,STRONG:0,'VERY STRONG':0,'UNGUESSABLE*':0};
