@@ -26,38 +26,44 @@ function generate(count,type,chaos,seed,profile){
  const r=rng(seed),set=new Set(),pr=profile||{};
  const terms=profileTerms(pr), first=(pr.first||'alex').replace(/[^a-z0-9]/gi,''), last=(pr.last||'morgan').replace(/[^a-z0-9]/gi,'');
  let dobYear='',dobMonth='',dobDay='';
- if(/^\d{4}-\d{2}-\d{2}$/.test(pr.dob||'')){const parts=pr.dob.split('-');dobYear=parts[0];dobMonth=parts[1];dobDay=parts[2]}
+ if(/^\\d{4}-\\d{2}-\\d{2}$/.test(pr.dob||'')){const parts=pr.dob.split('-');dobYear=parts[0];dobMonth=parts[1];dobDay=parts[2]}
  const datePieces=[dobYear,dobYear.slice(-2),dobMonth,dobDay,dobMonth+dobDay,dobDay+dobMonth,dobMonth+dobDay+dobYear.slice(-2),dobDay+dobMonth+dobYear.slice(-2)].filter(Boolean);
  const exactDateExamples=[dobYear,dobYear+dobMonth+dobDay,dobMonth+dobDay+dobYear.slice(-2),dobDay+dobMonth+dobYear.slice(-2)].filter(Boolean);
- const favNum=String(pr.favoriteNumber||'').replace(/\D/g,'');
+ const favNum=String(pr.favoriteNumber||'').replace(/\\D/g,'');
  const favVariants=favNum?[favNum,favNum+favNum.slice(-2),favNum+'0',favNum+'1'].filter((v,i,a)=>v&&a.indexOf(v)===i):[];
  const color=(pr.favoriteColor||'').toLowerCase().replace(/[^a-z0-9]/g,'');
  const profileNumberExamples=[...new Set([...exactDateExamples,...favVariants])];
  const profileWordExamples=[...new Set([...terms,color].filter(v=>v&&v.length>2))];
+ const safeWords=['Blue','Tiger','Rocket','Maple','Cedar','Pixel','Comet','River','Falcon','Quartz','Orbit','Forest'];
+ const safeLower=['blue','tiger','rocket','maple','cedar','pixel','comet','river','falcon','quartz','orbit','forest'];
+ const mixedChars='aZ7!kP2@qR9#vT4$';
+ function balanced(i){
+   const b=i%6;
+   if(b===0) return safeLower[i%safeLower.length].slice(0,5);
+   if(b===1) return (first||'alex').slice(0,5)+(10+(i%90));
+   if(b===2){const term=profileWordExamples.length?profileWordExamples[i%profileWordExamples.length]:safeLower[i%safeLower.length];return term.slice(0,6)+(favNum||datePieces[i%Math.max(1,datePieces.length)]||'42')+'!';}
+   if(b===3) return safeWords[i%safeWords.length]+(i%10)+'Sky!';
+   if(b===4){let p='';for(let j=0;j<13;j++)p+=mixedChars[(i*7+j*3)%mixedChars.length];return p;}
+   let p='';for(let j=0;j<20;j++)p+=mixedChars[(i*11+j*5)%mixedChars.length];return p;
+ }
  while(set.size<count){
-  let p='';
-  const bucket=set.size%8;
-  if(type==='numbers'){
-    if(profileNumberExamples.length && bucket<2) p=profileNumberExamples[set.size%profileNumberExamples.length];
-    else if(bucket===2 && datePieces.length) p=datePieces[set.size%datePieces.length];
-    else if(bucket===3 && favNum) p=favVariants[set.size%favVariants.length];
-    else if(chaos || bucket>=6) p=String(Math.floor(r()*90000000)+10000000);
-    else p=String(10+Math.floor(r()*90));
-  } else if((type==='words'||type==='mixed'||type==='all') && profileWordExamples.length && bucket<3){
-    const a=profileWordExamples[set.size%profileWordExamples.length],b=profileWordExamples[(set.size+1)%profileWordExamples.length]||first;
-    const numberChoice=favNum&&bucket===2?favNum:(datePieces.length&&bucket===1?datePieces[set.size%datePieces.length]:(10+Math.floor(r()*90)).toString());
-    p=a+(bucket===0?'':bucket===1?'_':'')+b+numberChoice;
-    if(bucket===0)p=p[0].toUpperCase()+p.slice(1);
-    if(bucket===2)p+='!';
-  } else if(type==='words'){
-    p=randomish(r,4+Math.floor(r()*4),false)+'-'+randomish(r,3,false);
-  } else {
-    const len=bucket<2?8+Math.floor(r()*3):bucket<5?11+Math.floor(r()*5):16+Math.floor(r()*8);
-    p=randomish(r,len,type==='mixed'||type==='all');
-    if((type==='mixed'||type==='all')&&bucket===1&&profileWordExamples.length)p=profileWordExamples[set.size%profileWordExamples.length]+'_'+(favNum||String(10+Math.floor(r()*90)));
-    if((type==='mixed'||type==='all')&&bucket===2&&datePieces.length)p+=datePieces[set.size%datePieces.length]+'!';
-  }
-  if(p.length>=6)set.add(p);
+   const i=set.size;
+   let p='';
+   if(type==='numbers'){
+     if(profileNumberExamples.length && i%4<2)p=profileNumberExamples[i%profileNumberExamples.length];
+     else if(datePieces.length && i%4===2)p=datePieces[i%datePieces.length];
+     else if(favNum && i%4===3)p=favVariants[i%favVariants.length];
+     else p=String((chaos?Math.floor(r()*90000000)+10000000:10+Math.floor(r()*90)));
+   } else if(type==='all'||type==='mixed'){
+     p=balanced(i);
+     if(chaos&&i%10===9)p=randomish(r,18,true);
+   } else if(type==='words'){
+     p=balanced(i);
+     if(i%6===3)p=safeWords[i%safeWords.length]+'-'+safeLower[(i+2)%safeLower.length];
+   } else {
+     p=randomish(r,6+Math.floor(r()*10),false);
+   }
+   if(p.length>=4)set.add(p);
  }
  return [...set];
 }
