@@ -24,7 +24,7 @@ input:focus,select:focus{outline:none;border-color:#8fa0b2;box-shadow:0 0 0 3px 
 .check{display:flex;align-items:center;gap:9px;margin-top:16px;color:#657386;font-size:12px;text-transform:none;letter-spacing:0;font-weight:400}.check input{width:auto}
 button{width:100%;margin-top:19px;padding:12px 14px;background:#365a7d;color:#fff;border:0;border-radius:8px;font:inherit;font-weight:700;cursor:pointer;transition:.15s;box-shadow:0 5px 14px rgba(54,90,125,.18)}
 button:hover{background:#416b93;transform:translateY(-1px)}button:disabled{opacity:.5;cursor:wait;transform:none}
-.info{margin-top:20px;padding:13px 14px;border:1px solid #d5dce5;background:#f7f9fb;border-radius:9px;color:#7f8a9a;font-size:11px}
+.riskbox{margin-top:18px;padding:15px;border:1px solid #c9d9ea;background:#eef6ff;border-radius:9px;color:#365a7d;font-size:12px}.riskbox b{display:block;color:#244f7c;margin-bottom:5px}.info{margin-top:20px;padding:13px 14px;border:1px solid #d5dce5;background:#f7f9fb;border-radius:9px;color:#7f8a9a;font-size:11px}
 .stats{display:flex;gap:9px;flex-wrap:wrap;margin:22px 0 15px}
 .stat{min-width:105px;padding:11px 12px;background:#f8fafc;border:1px solid #d5dce5;border-radius:9px}
 .stat b{display:block;color:#1d2632;font-size:18px}.muted{color:#707b8b;font-size:9px;text-transform:uppercase;letter-spacing:.6px}
@@ -62,6 +62,22 @@ h2{font-size:16px;font-weight:650;color:#dbe1e9;margin:20px 0 10px}
     <div class="days" id="calDays"></div>
   </div>
 </div>
+        </div>
+        <div>
+          <label for="favorite">Favorite thing (fictional)</label>
+          <input id="favorite" placeholder="Dolphin, soccer, music...">
+        </div>
+        <div>
+          <label for="nickname">Nickname (fictional)</label>
+          <input id="nickname" placeholder="Alex">
+        </div>
+        <div>
+          <label for="place">Favorite place (fictional)</label>
+          <input id="place" placeholder="Beach, city, park...">
+        </div>
+        <div>
+          <label for="importantYear">Important year (fictional)</label>
+          <input id="importantYear" type="number" min="1900" max="2026" placeholder="2015">
         </div>
         <div>
           <label for="type">Pattern type</label>
