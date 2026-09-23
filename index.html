@@ -10,11 +10,11 @@ h1{margin:0 0 8px;font-size:32px}.sub{color:#9eacc0;margin-bottom:20px}.safe{dis
 .grid,.controls{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:650px){.grid,.controls{grid-template-columns:1fr}}
 label{display:block;font-size:13px;color:#aebbd0;margin-bottom:6px}input,select{width:100%;padding:13px;border-radius:10px;border:1px solid #30415a;background:#080e18;color:white;font-size:16px}
 .controls{margin-top:14px}.check{display:flex;align-items:center;gap:8px;margin-top:12px;color:#aebbd0;font-size:13px}.check input{width:auto}
-button{margin-top:18px;width:100%;padding:13px;border:0;border-radius:10px;background:#4d8dff;color:white;font-weight:700;font-size:16px;cursor:pointer}button:hover{filter:brightness(1.1)}
+button{margin-top:18px;width:100%;padding:13px;border:0;border-radius:10px;background:#4d8dff;color:white;font-weight:700;font-size:16px;cursor:pointer}button:hover{filter:brightness(1.1)}button:disabled{opacity:.6;cursor:wait}
 .stats{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}.stat{background:#09101b;border:1px solid #1e2b3e;border-radius:10px;padding:10px 14px}.stat b{display:block;font-size:20px}.muted{color:#8e9cb0;font-size:12px}
-#out{margin-top:22px}.list{max-height:500px;overflow:auto}.row{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;margin:6px 0;background:#09101b;border:1px solid #1e2b3e;border-radius:10px;font-family:ui-monospace,monospace}.weak{color:#ffbd70}.medium{color:#ffe27a}.strong{color:#7ee2a8}.bruh{color:#ff6b6b;font-weight:800}.unpredictable{color:#b995ff;font-weight:800}
-.badge{padding:3px 8px;border-radius:999px;background:#172338;font-size:12px;white-space:nowrap}
+#out{margin-top:22px}.list{max-height:500px;overflow:auto}.row{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;margin:6px 0;background:#09101b;border:1px solid #1e2b3e;border-radius:10px;font-family:ui-monospace,monospace}.weak{color:#ffbd70}.medium{color:#ffe27a}.strong{color:#7ee2a8}.bruh{color:#ff6b6b;font-weight:800}.unpredictable{color:#b995ff;font-weight:800}.badge{padding:3px 8px;border-radius:999px;background:#172338;font-size:12px;white-space:nowrap}
 .note{margin-top:18px;padding:12px;border-radius:10px;background:#111c2c;color:#aebbd0;font-size:13px;line-height:1.5}
+.loader{margin-top:22px;padding:24px;background:#050911;border:1px solid #26344a;border-radius:14px;text-align:center}.terminal{font-family:ui-monospace,monospace;color:#7ee2a8;min-height:48px;font-size:14px}.bar{height:10px;background:#172338;border-radius:99px;overflow:hidden;margin:18px 0 10px}.fill{height:100%;width:0;background:#4d8dff;transition:width .2s linear}.percent{font-size:28px;font-weight:800}.funny{color:#aebbd0;margin-top:8px}
 </style></head>
 <body><main><div class="card">
 <span class="safe">SAFE SIMULATOR • FICTIONAL DATA ONLY</span>
@@ -31,56 +31,49 @@ button{margin-top:18px;width:100%;padding:13px;border:0;border-radius:10px;backg
 <label class="check"><input id="chaos" type="checkbox" checked> Include advanced random-looking patterns</label>
 <button id="go">RUN ADVANCED SIMULATION</button>
 <div id="out"></div>
-<div class="note">Fictional characters only. Everything runs locally in your browser and is never submitted to an account or website. “Unpredictable” here means the simulator could not find obvious personal-information patterns; it is not a guarantee of real-world security.</div>
+<div class="note">Fictional characters only. Everything runs locally in your browser and is never submitted to an account or website. The loading sequence is just a fun simulation.</div>
 </div></main>
 <script>
-const out=document.getElementById('out');
+const out=document.getElementById('out'),go=document.getElementById('go');
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
 function rng(seed){return()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296}}
 function analyze(p,first,last,y,m,d){
- let obvious=0;
- const low=p.toLowerCase(), personal=[first,last,String(y),String(y).slice(-2),String(m).padStart(2,'0'),String(d).padStart(2,'0')];
+ let obvious=0;const low=p.toLowerCase(),personal=[first,last,String(y),String(y).slice(-2),String(m).padStart(2,'0'),String(d).padStart(2,'0')];
  personal.forEach(x=>{if(x.length>1&&low.includes(x))obvious++});
- const unique=new Set(p).size, variety=(/[a-z]/.test(p)?1:0)+(/[A-Z]/.test(p)?1:0)+(/[0-9]/.test(p)?1:0)+(/[^A-Za-z0-9]/.test(p)?1:0);
- if(obvious>=2||p.length<7)return ['BRUH','bruh'];
- if(obvious===1)return ['WEAK','weak'];
- if(p.length<10||variety<2)return ['MEDIUM','medium'];
- if(p.length<13||unique<8||variety<3)return ['STRONG','strong'];
- if(p.length>=16&&variety>=3&&unique>=10)return ['UNGUESSABLE*','unpredictable'];
- return ['VERY STRONG','strong'];
+ const unique=new Set(p).size,variety=(/[a-z]/.test(p)?1:0)+(/[A-Z]/.test(p)?1:0)+(/[0-9]/.test(p)?1:0)+(/[^A-Za-z0-9]/.test(p)?1:0);
+ if(obvious>=2||p.length<7)return ['BRUH','bruh'];if(obvious===1)return ['WEAK','weak'];
+ if(p.length<10||variety<2)return ['MEDIUM','medium'];if(p.length<13||unique<8||variety<3)return ['STRONG','strong'];
+ if(p.length>=16&&variety>=3&&unique>=10)return ['UNGUESSABLE*','unpredictable'];return ['VERY STRONG','strong'];
 }
-function numeric(r,y,m,d,i){
- const patterns=[String(y),String(y).slice(-2)+String(m).padStart(2,'0')+String(d).padStart(2,'0'),
- String(m).padStart(2,'0')+String(d).padStart(2,'0')+String(y).slice(-2),
- String(d).padStart(2,'0')+String(m).padStart(2,'0')+String(y),
- String(Math.floor(r()*900000)+100000),String(Math.floor(r()*90000000)+10000000),
- String((i*37)%1000000).padStart(6,'0')];
- return patterns[i%patterns.length]
-}
+function numeric(r,y,m,d,i){const patterns=[String(y),String(y).slice(-2)+String(m).padStart(2,'0')+String(d).padStart(2,'0'),String(m).padStart(2,'0')+String(d).padStart(2,'0')+String(y).slice(-2),String(d).padStart(2,'0')+String(m).padStart(2,'0')+String(y),String(Math.floor(r()*900000)+100000),String(Math.floor(r()*90000000)+10000000),String((i*37)%1000000).padStart(6,'0')];return patterns[i%patterns.length]}
 const letters='abcdefghijklmnopqrstuvwxyz',symbols='!@#$%^&*_+=?';
-function randomish(r,n,withSymbols){
- let p='';for(let i=0;i<n;i++){let q=r();if(q<.42)p+=letters[Math.floor(r()*26)];else if(q<.78)p+=letters[Math.floor(r()*26)].toUpperCase();else if(q<.93)p+=Math.floor(r()*10);else if(withSymbols)p+=symbols[Math.floor(r()*symbols.length)];else p+=Math.floor(r()*10)}return p;
-}
-document.getElementById('go').onclick=()=>{
- const name=document.getElementById('name').value.trim(),dob=document.getElementById('dob').value;
- if(!name||!dob){out.innerHTML='<p class="weak">Enter both fictional fields.</p>';return}
+function rndLen(r,n){return Math.floor(r()*n)}
+function randomish(r,n,withSymbols){let p='';for(let i=0;i<n;i++){let q=r();if(q<.42)p+=letters[Math.floor(r()*26)];else if(q<.78)p+=letters[Math.floor(r()*26)].toUpperCase();else if(q<.93)p+=Math.floor(r()*10);else if(withSymbols)p+=symbols[Math.floor(r()*symbols.length)];else p+=Math.floor(r()*10)}return p}
+function generate(name,dob){
  const parts=name.toLowerCase().split(/\s+/).filter(Boolean),first=parts[0]||'alex',last=parts.at(-1)||'morgan';
  const [y,m,d]=dob.split('-').map(Number),seed=hash(name+'|'+dob),r=rng(seed),type=document.getElementById('type').value,count=Number(document.getElementById('count').value),chaos=document.getElementById('chaos').checked;
- const set=new Set(),base=[first,last,first+last,last+first],suffix=['123','1234','1','01','12','21',String(y).slice(-2),String(y),String(m).padStart(2,'0'),String(d).padStart(2,'0')];
- let guard=0;
+ const set=new Set(),base=[first,last,first+last,last+first],suffix=['123','1234','1','01','12','21',String(y).slice(-2),String(y),String(m).padStart(2,'0'),String(d).padStart(2,'0')];let guard=0;
  while(set.size<count&&guard<count*10){guard++;let p='';
-   if(type==='numbers'||(type==='all'&&r()<.25))p=numeric(r,y,m,d,guard);
-   else if(chaos&&(type==='mixed'||type==='all')&&r()<.20)p=randomish(r,16+rndLen(r,6),true);
-   else{let w=base[Math.floor(r()*base.length)],s=suffix[Math.floor(r()*suffix.length)];p=w+s;
-     if(type==='mixed'||(type==='all'&&r()<.35))p+=symbols[Math.floor(r()*symbols.length)];
-     if(r()<.25)p=p[0].toUpperCase()+p.slice(1);if(r()<.15)p+=Math.floor(r()*90+10)}
-   if(type==='words'&&!/[A-Za-z]/.test(p))continue;
-   set.add(p)
+  if(type==='numbers'||(type==='all'&&r()<.25))p=numeric(r,y,m,d,guard);
+  else if(chaos&&(type==='mixed'||type==='all')&&r()<.20)p=randomish(r,16+rndLen(r,6),true);
+  else{let w=base[Math.floor(r()*base.length)],s=suffix[Math.floor(r()*suffix.length)];p=w+s;if(type==='mixed'||(type==='all'&&r()<.35))p+=symbols[Math.floor(r()*symbols.length)];if(r()<.25)p=p[0].toUpperCase()+p.slice(1);if(r()<.15)p+=Math.floor(r()*90+10)}
+  if(type==='words'&&!/[A-Za-z]/.test(p))continue;set.add(p)
  }
- const arr=[...set],shown=arr.slice(0,200),labels=arr.map(x=>analyze(x,first,last,y,m,d)[0]);
- const counts={BRUH:0,WEAK:0,MEDIUM:0,STRONG:0,'VERY STRONG':0,'UNGUESSABLE*':0};labels.forEach(x=>counts[x]++);
- out.innerHTML='<div class="stats"><div class="stat"><b>'+arr.length.toLocaleString()+'</b><span class="muted">generated</span></div><div class="stat"><b>'+counts.BRUH+'</b><span class="muted">BRUH 💀</span></div><div class="stat"><b>'+counts.STRONG+'</b><span class="muted">strong</span></div><div class="stat"><b>'+counts['UNGUESSABLE*']+'</b><span class="muted">UNGUESSABLE*</span></div></div><h2>Advanced results</h2><div class="list">'+shown.map(p=>{let a=analyze(p,first,last,y,m,d);return '<div class="row"><span>'+esc(p)+'</span><span class="badge '+a[1]+'">'+a[0]+'</span></div>'}).join('')+'</div><p class="note">Showing '+shown.length+' of '+arr.length.toLocaleString()+' results. *“UNGUESSABLE” is a simulator label, not a security guarantee. For real accounts, use a unique randomly generated password and MFA.</p>';
+ return {arr:[...set],first,last,y,m,d}
+}
+go.onclick=()=>{
+ const name=document.getElementById('name').value.trim(),dob=document.getElementById('dob').value;
+ if(!name||!dob){out.innerHTML='<p class="weak">Enter both fictional fields.</p>';return}
+ go.disabled=true;
+ const stages=['Connecting to the totally fictional mainframe...','Hacking the imaginary password matrix...','Bribing the virtual calculator...','Teaching the CPU suspicious math...','Scanning 3,000 fictional patterns...','Asking the pixels nicely...','Running advanced local analysis...','Almost done. Definitely not hacking anything.'];
+ const start=performance.now(),duration=15000;
+ out.innerHTML='<div class="loader"><div class="terminal" id="term" aria-live="polite">'+stages[0]+'</div><div class="bar"><div class="fill" id="fill"></div></div><div class="percent" id="pct">0%</div><div class="funny">Please wait while the extremely serious computer does extremely serious things. 😂</div></div>';
+ const timer=setInterval(()=>{
+   const elapsed=performance.now()-start,progress=Math.min(1,elapsed/duration),idx=Math.min(stages.length-1,Math.floor(progress*stages.length));
+   document.getElementById('fill').style.width=(progress*100)+'%';document.getElementById('pct').textContent=Math.floor(progress*100)+'%';document.getElementById('term').textContent=stages[idx];
+   if(progress>=1){clearInterval(timer);const result=generate(name,dob),arr=result.arr,shown=arr.slice(0,200),labels=arr.map(x=>analyze(x,result.first,result.last,result.y,result.m,result.d)[0]);const counts={BRUH:0,WEAK:0,MEDIUM:0,STRONG:0,'VERY STRONG':0,'UNGUESSABLE*':0};labels.forEach(x=>counts[x]++);
+   out.innerHTML='<div class="stats"><div class="stat"><b>'+arr.length.toLocaleString()+'</b><span class="muted">generated</span></div><div class="stat"><b>'+counts.BRUH+'</b><span class="muted">BRUH 💀</span></div><div class="stat"><b>'+counts.STRONG+'</b><span class="muted">strong</span></div><div class="stat"><b>'+counts['UNGUESSABLE*']+'</b><span class="muted">UNGUESSABLE*</span></div></div><h2>Advanced results</h2><div class="list">'+shown.map(p=>{let a=analyze(p,result.first,result.last,result.y,result.m,result.d);return '<div class="row"><span>'+esc(p)+'</span><span class="badge '+a[1]+'">'+a[0]+'</span></div>'}).join('')+'</div><p class="note">Showing '+shown.length+' of '+arr.length.toLocaleString()+' results. *“UNGUESSABLE” is a simulator label, not a security guarantee.</p>';go.disabled=false}
+ },100);
 };
-function rndLen(r,n){return Math.floor(r()*n)}
 </script></body></html>
