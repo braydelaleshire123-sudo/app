@@ -2,32 +2,32 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Password Security Lab // NEXUS 2050</title>
+<title>Password Security Lab</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#02040a;color:#dffcff;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;min-height:100vh}
+*{box-sizing:border-box}body{margin:0;background:#f5f7fa;color:#1d2935;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;min-height:100vh}
 body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(rgba(70,240,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(70,240,255,.025) 1px,transparent 1px);background-size:32px 32px;mask-image:linear-gradient(to bottom,#000,transparent 95%);z-index:5}
-main{max-width:1180px;margin:auto;padding:22px 14px;position:relative;z-index:2}.card{background:linear-gradient(145deg,#071019,#04070d 65%);border:1px solid #164456;border-radius:12px;padding:20px;box-shadow:0 0 60px #00d9ff0c,0 25px 80px #000}
-.top{display:flex;justify-content:space-between;gap:15px;align-items:center;border-bottom:1px solid #164456;padding-bottom:13px;margin-bottom:18px}.brand{color:#55edff;font-weight:900;letter-spacing:3px}.status{color:#55edff;font-size:11px}.dot{display:inline-block;width:7px;height:7px;background:#55edff;border-radius:50%;box-shadow:0 0 12px #55edff;margin-right:7px}
-h1{margin:0 0 6px;font-size:30px;color:#efffff;text-shadow:0 0 20px #36eaff35}.sub{color:#6799a8;margin-bottom:20px;font-size:12px}.safe{display:inline-block;color:#62f3c0;border:1px solid #176b58;background:#041812;padding:5px 9px;font-size:10px;letter-spacing:1px}
+main{max-width:1180px;margin:auto;padding:22px 14px;position:relative;z-index:2}.card{background:linear-gradient(145deg,#071019,#04070d 65%);border:1px solid #d7dee6;border-radius:12px;padding:20px;box-shadow:0 8px 30px rgba(20,40,60,.08)}
+.top{display:flex;justify-content:space-between;gap:15px;align-items:center;border-bottom:1px solid #164456;padding-bottom:13px;margin-bottom:18px}.brand{color:#1769aa;font-weight:900;letter-spacing:3px}.status{color:#1769aa;font-size:11px}.dot{display:inline-block;width:7px;height:7px;background:#55edff;border-radius:50%;box-shadow:0 0 12px #55edff;margin-right:7px}
+h1{margin:0 0 6px;font-size:30px;color:#17212b;text-shadow:none}.sub{color:#607080;margin-bottom:20px;font-size:12px}.safe{display:inline-block;color:#62f3c0;border:1px solid #176b58;background:#041812;padding:5px 9px;font-size:10px;letter-spacing:1px}
 .grid,.controls{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:760px){.grid,.controls{grid-template-columns:1fr}}
-label{display:block;font-size:10px;color:#6ea6b8;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}input,select{width:100%;padding:12px;border-radius:5px;border:1px solid #1a5267;background:#02070c;color:#d9fbff;font:inherit;font-size:14px;outline:none}input:focus,select:focus{border-color:#43eaff;box-shadow:0 0 16px #43eaff18}
+label{display:block;font-size:10px;color:#6ea6b8;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}input,select{width:100%;padding:12px;border-radius:5px;border:1px solid #1a5267;background:#fff;color:#24313d;font:inherit;font-size:14px;outline:none}input:focus,select:focus{border-color:#2684c6;box-shadow:0 0 0 3px rgba(38,132,198,.12)}
 .controls{margin-top:12px}.check{display:flex;align-items:center;gap:8px;margin-top:12px;color:#6e9cac;font-size:11px;text-transform:none;letter-spacing:0}.check input{width:auto;accent-color:#43eaff}
-button{margin-top:18px;width:100%;padding:14px;border:1px solid #43eaff;border-radius:5px;background:linear-gradient(90deg,#06222b,#09202a);color:#65f2ff;font:inherit;font-weight:900;letter-spacing:2px;cursor:pointer;box-shadow:inset 0 0 25px #43eaff0b,0 0 20px #43eaff09}button:hover{background:#0a2933;box-shadow:0 0 28px #43eaff20}button:disabled{opacity:.55;cursor:wait}
-.future{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:9px;margin:16px 0}@media(max-width:760px){.future{grid-template-columns:1fr}}.module{border:1px solid #164456;background:#030a10;padding:11px;position:relative;overflow:hidden}.module:after{content:"";position:absolute;left:0;bottom:0;height:1px;width:55%;background:#43eaff;box-shadow:0 0 12px #43eaff}.module b{display:block;color:#55edff;font-size:16px}.module span{color:#557d89;font-size:9px;letter-spacing:1px}
-.stats{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.stat{background:#03080d;border:1px solid #164456;padding:9px 12px;min-width:105px}.stat b{display:block;font-size:18px;color:#62f3ff}.muted{color:#527581;font-size:9px;text-transform:uppercase}
-#out{margin-top:22px}.list{max-height:70vh;overflow:auto;border:1px solid #164456;padding:5px;background:#02060a}.row{display:flex;justify-content:space-between;gap:12px;padding:8px 10px;margin:3px 0;background:#040a10;border-left:2px solid #12516a;font-size:12px}.row:hover{background:#07151d}.weak{color:#ffb45f}.medium{color:#f0db67}.strong{color:#62f3c0}.bruh{color:#ff6877;font-weight:800}.unpredictable{color:#c99aff;font-weight:800}.badge{padding:2px 7px;border:1px solid #174c5f;background:#06131a;font-size:9px;white-space:nowrap}.ai{color:#55edff}
-.note{margin-top:14px;padding:10px;border:1px solid #164456;background:#03080d;color:#587f8c;font-size:10px;line-height:1.5}
-.loader{margin-top:22px;padding:20px;background:#010409;border:1px solid #1b596d;text-align:left}.terminal{color:#62f3ff;min-height:48px;font-size:12px;line-height:1.8}.terminal:before{content:"> ";color:#44eaff}.bar{height:7px;background:#07151c;overflow:hidden;margin:15px 0 9px}.fill{height:100%;width:0;background:#43eaff;box-shadow:0 0 15px #43eaff;transition:width .2s linear}.percent{font-size:22px;font-weight:900;color:#62f3ff}.funny{color:#41636e;margin-top:8px;font-size:10px}
+button{margin-top:18px;width:100%;padding:14px;border:1px solid #43eaff;border-radius:5px;background:linear-gradient(90deg,#06222b,#09202a);color:#fff;font:inherit;font-weight:900;letter-spacing:2px;cursor:pointer;box-shadow:0 2px 5px rgba(20,50,80,.12)}button:hover{background:#12598f;box-shadow:0 4px 12px rgba(20,80,130,.2)}button:disabled{opacity:.55;cursor:wait}
+.future{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:9px;margin:16px 0}@media(max-width:760px){.future{grid-template-columns:1fr}}.module{border:1px solid #d7dee6;background:#f8fafc;padding:11px;position:relative;overflow:hidden}.module:after{content:"";position:absolute;left:0;bottom:0;height:1px;width:55%;background:#2684c6;box-shadow:0 0 12px #43eaff}.module b{display:block;color:#1769aa;font-size:16px}.module span{color:#607080;font-size:9px;letter-spacing:1px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.stat{background:#f8fafc;border:1px solid #d7dee6;padding:9px 12px;min-width:105px}.stat b{display:block;font-size:18px;color:#1769aa}.muted{color:#527581;font-size:9px;text-transform:uppercase}
+#out{margin-top:22px}.list{max-height:70vh;overflow:auto;border:1px solid #d7dee6;padding:5px;background:#fff}.row{display:flex;justify-content:space-between;gap:12px;padding:8px 10px;margin:3px 0;background:#f7f9fb;border-left:2px solid #12516a;font-size:12px}.row:hover{background:#eef5fa}.weak{color:#ffb45f}.medium{color:#f0db67}.strong{color:#62f3c0}.bruh{color:#ff6877;font-weight:800}.unpredictable{color:#c99aff;font-weight:800}.badge{padding:2px 7px;border:1px solid #174c5f;background:#f1f5f8;font-size:9px;white-space:nowrap}.ai{color:#1769aa}
+.note{margin-top:14px;padding:10px;border:1px solid #d7dee6;background:#f8fafc;color:#607080;font-size:10px;line-height:1.5}
+.loader{margin-top:22px;padding:20px;background:#f8fafc;border:1px solid #cbd6df;text-align:left}.terminal{color:#1769aa;min-height:48px;font-size:12px;line-height:1.8}.terminal:before{content:"> ";color:#44eaff}.bar{height:7px;background:#e5ebf0;overflow:hidden;margin:15px 0 9px}.fill{height:100%;width:0;background:#2684c6;box-shadow:none;transition:width .2s linear}.percent{font-size:22px;font-weight:900;color:#1769aa}.funny{color:#6b7785;margin-top:8px;font-size:10px}
 </style></head>
 <body><main><div class="card">
-<div class="top"><div class="brand">NEXUS//SECURITY_OS 2050</div><div class="status"><span class="dot"></span>NEURAL CORE ONLINE // LOCAL</div></div>
+<div class="top"><div class="brand">PASSWORD SECURITY LAB</div><div class="status"><span class="dot"></span>ANALYSIS ENGINE ONLINE</div></div>
 
-<h1>Advanced Security Lab</h1>
-<div class="sub">NEXT-GENERATION PATTERN ANALYSIS // SIMULATED 2050 INTERFACE</div>
+<h1>Password Security Lab</h1>
+<div class="sub">Analyze fictional password patterns and see how an AI-style security model rates them.</div>
 <div class="future">
-<div class="module"><b>NEURAL ANALYSIS</b><span>LOCAL HEURISTIC ENGINE // READY</span></div>
-<div class="module"><b>99.8%</b><span>SYSTEM INTEGRITY</span></div>
-<div class="module"><b>0 NET</b><span>NETWORK ACCESS</span></div>
+<div class="module"><b>AI PATTERN ANALYSIS</b><span>LOCAL SECURITY MODEL // READY</span></div>
+<div class="module"><b>LOCAL</b><span>YOUR DATA STAYS IN THIS PAGE</span></div>
+<div class="module"><b>OFFLINE</b><span>NO ACCOUNT OR NETWORK TESTING</span></div>
 </div>
 <div class="grid">
 <div><label>Fictional name</label><input id="name" placeholder="Alex Morgan"></div>
@@ -38,7 +38,7 @@ button{margin-top:18px;width:100%;padding:14px;border:1px solid #43eaff;border-r
 <div><label>How many examples</label><select id="count"><option value="1000">1,000</option><option value="3000" selected>3,000</option><option value="5000">5,000</option></select></div>
 <div><label>Sort by</label><select id="sort"><option value="generated">Generated order</option><option value="ai-likely">AI pattern score (simulated)</option><option value="strength-desc">Strongest first</option><option value="strength-asc">Weakest first</option><option value="length-desc">Longest first</option><option value="length-asc">Shortest first</option><option value="az">A → Z</option><option value="za">Z → A</option></select></div>
 </div>
-<label class="check"><input id="chaos" type="checkbox" checked> Enable synthetic high-entropy patterns</label>
+<label class="check"><input id="chaos" type="checkbox" checked> Include random high-entropy examples</label>
 <button id="go" type="button">Generate example passwords</button>
 <div id="out"></div>
 </div></main>
