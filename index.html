@@ -34,7 +34,7 @@ h2{font-size:16px;font-weight:650;color:#dbe1e9;margin:20px 0 10px}
 .badge{padding:3px 7px;border:1px solid #303946;background:#eef2f6;color:#8f9aaa;border-radius:5px;font-size:9px}.ai{color:#526173}
 .weak{color:#b64c58}.medium{color:#9a761d}.strong{color:#2c8054}.bruh{color:#b64c58;font-weight:700}.unpredictable{color:#c4ccd7;font-weight:700}
 .loader{margin-top:20px;padding:17px;border:1px solid #d5dce5;border-radius:9px;background:#f5f7fa}.terminal{min-height:24px;color:#526173;font-size:12px}.bar{height:5px;background:#dbe2ea;overflow:hidden;border-radius:5px;margin:13px 0 8px}.fill{height:100%;width:0;background:#51677e}.percent{color:#1d2632;font-size:17px;font-weight:650}.funny{margin-top:7px;color:#718096;font-size:10px}.note{margin-top:12px;color:#718096;font-size:11px}
-.date-wrap{position:relative}.date-wrap input{width:100%;box-sizing:border-box;padding-right:42px;cursor:pointer}.cal-open{position:absolute;right:5px;top:5px;width:34px!important;height:34px;margin:0!important;padding:0!important;background:#3976b7!important;border-radius:7px!important;font-size:15px;box-shadow:none!important}.calendar{position:absolute;z-index:20;top:calc(100% + 8px);left:0;width:290px;padding:12px;background:#fff;border:1px solid #cdd7e3;border-radius:10px;box-shadow:0 14px 35px rgba(35,65,95,.18)}.cal-head{display:grid;grid-template-columns:34px 1fr 34px;align-items:center;gap:6px;margin-bottom:9px}.cal-head button{width:34px!important;height:30px;margin:0!important;padding:0!important;background:#edf4fb!important;color:#3976b7!important;border:1px solid #d7e2ee;border-radius:6px!important;box-shadow:none!important}.cal-head strong{text-align:center;color:#244f7c;font-size:13px}.week,.days{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}.week span{text-align:center;color:#718096;font-size:9px;font-weight:700;padding:4px 0}.days button{width:100%!important;height:30px;margin:0!important;padding:0!important;background:transparent!important;color:#34465a!important;border:0!important;border-radius:6px!important;box-shadow:none!important;font-size:11px;font-weight:500}.days button:hover{background:#e8f1fa!important;color:#3976b7!important}.days button.selected{background:#3976b7!important;color:#fff!important}.days button.muted-day{color:#b5bfcb!important}.days button.today{outline:1px solid #75a6d2;outline-offset:-2px}.date-wrap input:focus{border-color:#3976b7;box-shadow:0 0 0 3px rgba(57,118,183,.12)}h1{color:#244f7c}h2{color:#315f8c}label{color:#416b93}button{background:#3976b7!important;box-shadow:0 6px 16px rgba(57,118,183,.22)!important}button:hover{background:#2f679f!important}.card:before{background:linear-gradient(90deg,#3976b7,#5d94cf,#65a99a)!important}</style>
+</style>
 </head>
 <body>
 <main>
@@ -53,11 +53,7 @@ h2{font-size:16px;font-weight:650;color:#dbe1e9;margin:20px 0 10px}
         </div>
         <div>
           <label for="dob">Fictional date of birth</label>
-          <div class="date-wrap">
-  <input id="dob" type="text" placeholder="Choose a date" readonly aria-label="Date of birth">
-  <button type="button" class="cal-open" id="calOpen" aria-label="Open calendar">▣</button>
-  <div class="calendar" id="calendar" hidden>
-    <div class="cal-head"><button type="button" id="prevMonth">‹</button><strong id="calTitle"></strong><button type="button" id="nextMonth">›</button></div>
+          <input id="dob" type="date" aria-label="Date of birth">
     <div class="week"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div>
     <div class="days" id="calDays"></div>
   </div>
@@ -137,33 +133,5 @@ h2{font-size:16px;font-weight:650;color:#dbe1e9;margin:20px 0 10px}
   </div>
 </main>
 <script defer src="script.js"></script>
-<script>
-(function(){
- const input=document.getElementById('dob'),open=document.getElementById('calOpen'),cal=document.getElementById('calendar'),days=document.getElementById('calDays'),title=document.getElementById('calTitle');
- let view=new Date(), selected=null;
- function render(){
-   title.textContent=view.toLocaleString(undefined,{month:'long',year:'numeric'});
-   days.innerHTML='';
-   const y=view.getFullYear(),m=view.getMonth(),first=new Date(y,m,1).getDay(),total=new Date(y,m+1,0).getDate(),prevTotal=new Date(y,m,0).getDate();
-   for(let i=0;i<42;i++){
-     const n=i-first+1, b=document.createElement('button');
-     let yy=y,mm=m,dd=n;
-     if(n<1){dd=prevTotal+n;mm--;if(mm<0){mm=11;yy--}b.className='muted-day'}
-     else if(n>total){dd=n-total;mm++;if(mm>11){mm=0;yy++}b.className='muted-day'}
-     b.textContent=dd;
-     const val=yy+'-'+String(mm+1).padStart(2,'0')+'-'+String(dd).padStart(2,'0');
-     if(input.value===val)b.classList.add('selected');
-     const now=new Date(); if(yy===now.getFullYear()&&mm===now.getMonth()&&dd===now.getDate())b.classList.add('today');
-     b.addEventListener('click',function(){input.value=val;selected=val;cal.hidden=true;input.dispatchEvent(new Event('change',{bubbles:true}))});
-     days.appendChild(b);
-   }
- }
- open.addEventListener('click',function(){cal.hidden=!cal.hidden;render()});
- input.addEventListener('click',function(){cal.hidden=false;render()});
- document.getElementById('prevMonth').addEventListener('click',function(){view.setMonth(view.getMonth()-1);render()});
- document.getElementById('nextMonth').addEventListener('click',function(){view.setMonth(view.getMonth()+1);render()});
- document.addEventListener('click',function(e){if(!e.target.closest('.date-wrap'))cal.hidden=true});
- render();
-})();
-</script></body>
+</body>
 </html>
