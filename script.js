@@ -13,6 +13,7 @@ function personalRisk(profile){
  if(profile.place||profile.team||profile.music)score+=10;
  if(profile.importantYear)score+=15;
  if(profile.favoriteNumber)score+=12;
+ if(profile.favoriteColor)score+=8;
  return Math.min(99,score);
 }
 function profileTerms(profile){return Object.entries(profile).filter(([k])=>k!=='dob').map(([,v])=>String(v||'').toLowerCase().replace(/[^a-z0-9]/g,'')).filter(v=>v.length>2);}
@@ -79,7 +80,7 @@ go.addEventListener('click',function(){
   if(progress>=1){
    clearInterval(timer);
    const count=Number(document.getElementById('count').value),type=document.getElementById('type').value,chaos=document.getElementById('chaos').checked;
-   const profile={favorite:document.getElementById('favorite').value.trim(),favoriteNumber:document.getElementById('favoriteNumber').value.trim(),nickname:document.getElementById('nickname').value.trim(),place:document.getElementById('place').value.trim(),hobby:document.getElementById('hobby').value.trim(),animal:document.getElementById('animal').value.trim(),game:document.getElementById('game').value.trim(),team:document.getElementById('team').value.trim(),music:document.getElementById('music').value.trim(),importantYear:document.getElementById('importantYear').value.trim(),dob:dob};
+   const profile={favorite:document.getElementById('favorite').value.trim(),favoriteNumber:document.getElementById('favoriteNumber').value.trim(),favoriteColor:document.getElementById('favoriteColor').value.trim(),nickname:document.getElementById('nickname').value.trim(),place:document.getElementById('place').value.trim(),hobby:document.getElementById('hobby').value.trim(),animal:document.getElementById('animal').value.trim(),game:document.getElementById('game').value.trim(),team:document.getElementById('team').value.trim(),music:document.getElementById('music').value.trim(),importantYear:document.getElementById('importantYear').value.trim(),dob:dob};
    profile.first=name.split(/\s+/)[0]||'alex';profile.last=name.split(/\s+/).at(-1)||'morgan';const terms=profileTerms(profile),arr=generate(count,type,chaos,hash(name+'|'+JSON.stringify(profile)),profile),mode=document.getElementById('sort').value;
    const rank={'BRUH':0,'WEAK':1,'MEDIUM':2,'STRONG':3,'VERY STRONG':4,'UNGUESSABLE*':5};
    arr.sort(function(a,b){if(mode==='ai-likely')return aiPatternScore(b,profile.first,profile.last,y,m,d,terms)-aiPatternScore(a,profile.first,profile.last,y,m,d,terms);if(mode==='strength-desc')return rank[analyze(b,profile.first,profile.last,y,m,d,terms)[0]]-rank[analyze(a,profile.first,profile.last,y,m,d,terms)[0]];if(mode==='strength-asc')return rank[analyze(a,profile.first,profile.last,y,m,d,terms)[0]]-rank[analyze(b,profile.first,profile.last,y,m,d,terms)[0]];if(mode==='length-desc')return b.length-a.length;if(mode==='length-asc')return a.length-b.length;if(mode==='az')return a.localeCompare(b);if(mode==='za')return b.localeCompare(a);return 0});
