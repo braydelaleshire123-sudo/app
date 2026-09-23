@@ -24,14 +24,21 @@ function rndLen(r,n){return Math.floor(r()*n)}
 function randomish(r,n,withSymbols){let p='';for(let i=0;i<n;i++){let q=r();if(q<.42)p+=letters[Math.floor(r()*26)];else if(q<.78)p+=letters[Math.floor(r()*26)].toUpperCase();else if(q<.93)p+=Math.floor(r()*10);else if(withSymbols)p+=symbols[Math.floor(r()*symbols.length)];else p+=Math.floor(r()*10)}return p}
 function advancedPattern(r,first,last,y,m,d,extra=[]){const year=String(y),yy=year.slice(-2),mm=String(m).padStart(2,'0'),dd=String(d).padStart(2,'0');const clean=s=>s.replace(/[^a-z]/gi,'');const f=clean(first),l=clean(last);const leet=s=>s.replace(/a/gi,'4').replace(/e/gi,'3').replace(/i/gi,'1').replace(/o/gi,'0').replace(/s/gi,'5');const extras=extra.filter(Boolean).map(clean).filter(Boolean);const e=extras.length?extras[Math.floor(r()*extras.length)]:'example';const variants=[f+dd+yy,l+mm+yy,f+'_'+l,f+'.'+l,f+'-'+l,leet(f)+yy,leet(l)+dd,f.toUpperCase()+mm,f+l+dd,l+f+yy,f+dd+'!'+yy,f+'@'+mm+dd,e+yy,e+'123',f+e+dd,leet(e)+yy,randomish(r,18+rndLen(r,8),true),randomish(r,22+rndLen(r,10),true)];return variants[Math.floor(r()*variants.length)]}
 function generate(count,type,chaos,seed,profile){
- const r=rng(seed),set=new Set();
- const terms=profileTerms(profile||{}), first=(profile.first||'alex').replace(/[^a-z0-9]/gi,''), last=(profile.last||'morgan').replace(/[^a-z0-9]/gi,'');
+ const r=rng(seed),set=new Set(),pr=profile||{};
+ const terms=profileTerms(pr), first=(pr.first||'alex').replace(/[^a-z0-9]/gi,''), last=(pr.last||'morgan').replace(/[^a-z0-9]/gi,'');
+ let dobYear='',dobMonth='',dobDay='';
+ if(/^\\d{4}-\\d{2}-\\d{2}$/.test(pr.dob||'')){
+   const parts=pr.dob.split('-'); dobYear=parts[0]; dobMonth=parts[1]; dobDay=parts[2];
+ }
+ const datePieces=[dobYear,dobYear.slice(-2),dobMonth,dobDay,dobMonth+dobDay,dobDay+dobMonth,dobMonth+dobDay+dobYear.slice(-2),dobDay+dobMonth+dobYear.slice(-2)].filter(Boolean);
  while(set.size<count){
   let p='';
-  if(type==='numbers') p=String(Math.floor(r()*90000000)+10000000);
-  else if((type==='words'||type==='mixed'||type==='all') && terms.length && r()<0.65){
+  if(type==='numbers'){
+    if(datePieces.length && r()<0.72) p=datePieces[Math.floor(r()*datePieces.length)];
+    else p=String(Math.floor(r()*90000000)+10000000);
+  } else if((type==='words'||type==='mixed'||type==='all') && terms.length && r()<0.65){
     const a=terms[Math.floor(r()*terms.length)], b=terms.length>1?terms[Math.floor(r()*terms.length)]:first;
-    const suffix=r()<0.55?String(1900+Math.floor(r()*127)):(Math.floor(r()*900)+100).toString();
+    const suffix=r()<0.7 && datePieces.length ? datePieces[Math.floor(r()*datePieces.length)] : (Math.floor(r()*900)+100).toString();
     const join=r()<0.35?'':(r()<0.5?'_':'');
     p=a+join+b+suffix;
     if(r()<0.35)p=p[0].toUpperCase()+p.slice(1);
