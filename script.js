@@ -46,7 +46,7 @@ function generate(count,type,chaos,seed,profile){
    if(b===4){let p='';for(let j=0;j<13;j++)p+=mixedChars[(i*7+j*3)%mixedChars.length];return p;}
    let p='';for(let j=0;j<20;j++)p+=mixedChars[(i*11+j*5)%mixedChars.length];return p;
  }
- let safety=0; while(set.size<count && safety++<count*20){
+ let safety=0; while(set.size<count && safety++<count*200){
    const i=safety-1;
    let p='';
    if(type==='numbers'){
