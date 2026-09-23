@@ -34,12 +34,12 @@ function generate(count,type,chaos,seed,profile){
  while(set.size<count){
   let p='';
   if(type==='numbers'){
-    if(datePieces.length && set.size<Math.min(8,count)) p=exactDateExamples[set.size%exactDateExamples.length];
+    if(datePieces.length && set.size<Math.min(12,count)) p=exactDateExamples[set.size%exactDateExamples.length];
     else if(datePieces.length && r()<0.72) p=datePieces[Math.floor(r()*datePieces.length)];
     else p=String(Math.floor(r()*90000000)+10000000);
   } else if((type==='words'||type==='mixed'||type==='all') && terms.length && r()<0.65){
     const a=terms[Math.floor(r()*terms.length)], b=terms.length>1?terms[Math.floor(r()*terms.length)]:first;
-    const suffix=r()<0.7 && datePieces.length ? datePieces[Math.floor(r()*datePieces.length)] : (Math.floor(r()*900)+100).toString();
+    const suffix=r()<0.85 && datePieces.length ? datePieces[Math.floor(r()*datePieces.length)] : (Math.floor(r()*900)+100).toString();
     const join=r()<0.35?'':(r()<0.5?'_':'');
     p=a+join+b+suffix;
     if(r()<0.35)p=p[0].toUpperCase()+p.slice(1);
@@ -93,8 +93,8 @@ go.addEventListener('click',function(){
       });
       const exposure=personalRisk(profile);
       const counts={BRUH:0,WEAK:0,MEDIUM:0,STRONG:0,'VERY STRONG':0,'UNGUESSABLE*':0};
-      arr.forEach(function(p){counts[analyze(p,'','','','','')[0]]++;});
-      out.innerHTML='<div class="riskbox"><b>PERSONAL-INFO RISK: '+(exposure>=60?'HIGH':exposure>=30?'MEDIUM':'LOW')+'</b>Uses fictional profile details to demonstrate which kinds of personal information should be kept out of passwords. This module does not generate targeted guesses.</div><div class="stats"><div class="stat"><b>'+arr.length.toLocaleString()+'</b><span class="muted">generated</span></div><div class="stat"><b>'+counts.BRUH+'</b><span class="muted">BRUH</span></div><div class="stat"><b>'+counts.WEAK+'</b><span class="muted">WEAK</span></div><div class="stat"><b>'+counts.MEDIUM+'</b><span class="muted">MEDIUM</span></div><div class="stat"><b>'+counts.STRONG+'</b><span class="muted">STRONG</span></div><div class="stat"><b>'+counts['VERY STRONG']+'</b><span class="muted">VERY STRONG</span></div><div class="stat"><b>'+counts['UNGUESSABLE*']+'</b><span class="muted">UNGUESSABLE*</span></div></div><h2>SECURITY ANALYSIS // '+arr.length.toLocaleString()+' RECORDS</h2><div class="list">'+arr.map(function(p){const a=analyze(p,'','','','',''),terms=profileTerms(profile),hits=terms.filter(t=>p.toLowerCase().replace(/[^a-z0-9]/g,'').includes(t)).length,sc=Math.min(99,Math.max(0,aiPatternScore(p,'','','','','')+hits*18));return '<div class="row" data-ai="'+sc+'" data-order="'+arr.indexOf(p)+'"><span class="p">'+esc(p)+'</span><span><span class="badge ai">AI '+sc+'%</span> <span class="badge strength '+a[1]+'">'+a[0]+'</span></span></div>';}).join('')+'</div><p class="note">Showing '+arr.length.toLocaleString()+' results. AI-style score is calculated locally from password-pattern signals; this is not a real-world password prediction. Personal-info risk is an educational warning, not a password-guessing system.</p>';
+      arr.forEach(function(p){counts[analyze(p,profile.first,profile.last,y,m,d,terms)[0]]++;});
+      out.innerHTML='<div class="riskbox"><b>PERSONAL-INFO RISK: '+(exposure>=60?'HIGH':exposure>=30?'MEDIUM':'LOW')+'</b>Uses fictional profile details to demonstrate which kinds of personal information should be kept out of passwords. This module does not generate targeted guesses.</div><div class="stats"><div class="stat"><b>'+arr.length.toLocaleString()+'</b><span class="muted">generated</span></div><div class="stat"><b>'+counts.BRUH+'</b><span class="muted">BRUH</span></div><div class="stat"><b>'+counts.WEAK+'</b><span class="muted">WEAK</span></div><div class="stat"><b>'+counts.MEDIUM+'</b><span class="muted">MEDIUM</span></div><div class="stat"><b>'+counts.STRONG+'</b><span class="muted">STRONG</span></div><div class="stat"><b>'+counts['VERY STRONG']+'</b><span class="muted">VERY STRONG</span></div><div class="stat"><b>'+counts['UNGUESSABLE*']+'</b><span class="muted">UNGUESSABLE*</span></div></div><h2>SECURITY ANALYSIS // '+arr.length.toLocaleString()+' RECORDS</h2><div class="list">'+arr.map(function(p){const a=analyze(p,profile.first,profile.last,y,m,d,terms),sc=aiPatternScore(p,profile.first,profile.last,y,m,d,terms);return '<div class="row" data-ai="'+sc+'" data-order="'+arr.indexOf(p)+'"><span class="p">'+esc(p)+'</span><span><span class="badge ai">AI '+sc+'%</span> <span class="badge strength '+a[1]+'">'+a[0]+'</span></span></div>';}).join('')+'</div><p class="note">Showing '+arr.length.toLocaleString()+' results. AI-style score is calculated locally from password-pattern signals; this is not a real-world password prediction. Personal-info risk is an educational warning, not a password-guessing system.</p>';
       go.disabled=false;
     }
   },100);
