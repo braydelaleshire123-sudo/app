@@ -1,55 +1,14 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Password Security Lab</title>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Password Security Lab</title>
 <style>
-*{box-sizing:border-box}
-:root{color-scheme:dark}
-body{margin:0;background:#eef1f5;color:#1d2632;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 10% 10%,rgba(70,120,190,.10),transparent 32%),radial-gradient(circle at 90% 20%,rgba(55,170,150,.08),transparent 30%);}
-main{max-width:1100px;margin:0 auto;padding:32px 20px 60px}
-.card{background:rgba(255,255,255,.97);border:1px solid #d5dce5;border-radius:14px;padding:28px;box-shadow:0 18px 50px rgba(30,45,65,.10);position:relative;overflow:hidden}.card:before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,#4f7fb8,#61a99b,#7c8fc4)}
-header{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;border-bottom:1px solid #29313d;padding-bottom:20px;margin-bottom:25px}
-.brand{font-size:11px;font-weight:700;letter-spacing:1.8px;color:#4f6f96}
-h1{font-size:32px;line-height:1.1;font-weight:650;letter-spacing:-.8px;margin:8px 0;color:#17212d}
-.sub{color:#647286;font-size:14px;margin:0}
-.status{font-size:11px;color:#56705f;white-space:nowrap}.dot{display:inline-block;width:7px;height:7px;background:#55a978;border-radius:50%;margin-right:7px;box-shadow:0 0 9px rgba(85,169,120,.45)}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
-@media(max-width:700px){.grid{grid-template-columns:1fr}header{display:block}.status{margin-top:12px}}
-label{display:block;color:#647286;font-size:11px;font-weight:650;letter-spacing:.8px;text-transform:uppercase;margin-bottom:7px}
-input,select{width:100%;padding:11px 12px;background:#f7f9fb;border:1px solid #303946;border-radius:8px;color:#1d2632;font:inherit;font-size:14px;transition:.15s}
-input:focus,select:focus{outline:none;border-color:#8fa0b2;box-shadow:0 0 0 3px rgba(96,112,132,.10)}
-.check{display:flex;align-items:center;gap:9px;margin-top:16px;color:#657386;font-size:12px;text-transform:none;letter-spacing:0;font-weight:400}.check input{width:auto}
-button{width:100%;margin-top:19px;padding:12px 14px;background:#365a7d;color:#fff;border:0;border-radius:8px;font:inherit;font-weight:700;cursor:pointer;transition:.15s;box-shadow:0 5px 14px rgba(54,90,125,.18)}
-button:hover{background:#416b93;transform:translateY(-1px)}button:disabled{opacity:.5;cursor:wait;transform:none}
-.riskbox{margin-top:18px;padding:15px;border:1px solid #c9d9ea;background:#eef6ff;border-radius:9px;color:#365a7d;font-size:12px}.riskbox b{display:block;color:#244f7c;margin-bottom:5px}.info{margin-top:20px;padding:13px 14px;border:1px solid #d5dce5;background:#f7f9fb;border-radius:9px;color:#7f8a9a;font-size:11px}
-.stats{display:flex;gap:9px;flex-wrap:wrap;margin:22px 0 15px}
-.stat{min-width:105px;padding:11px 12px;background:#f8fafc;border:1px solid #d5dce5;border-radius:9px}
-.stat b{display:block;color:#1d2632;font-size:18px}.muted{color:#707b8b;font-size:9px;text-transform:uppercase;letter-spacing:.6px}
-h2{font-size:16px;font-weight:650;color:#dbe1e9;margin:20px 0 10px}
-.list{max-height:70vh;overflow:auto;border:1px solid #d5dce5;border-radius:9px;background:#f8fafc}
-.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 11px;border-bottom:1px solid #1d242d;font-size:12px}.row:last-child{border-bottom:0}.row:hover{background:#eef3f7}
-.badge{padding:3px 7px;border:1px solid #303946;background:#eef2f6;color:#8f9aaa;border-radius:5px;font-size:9px}.ai{color:#526173}
-.weak{color:#b64c58}.medium{color:#9a761d}.strong{color:#2c8054}.bruh{color:#b64c58;font-weight:700}.unpredictable{color:#c4ccd7;font-weight:700}
-.loader{margin-top:20px;padding:17px;border:1px solid #d5dce5;border-radius:9px;background:#f5f7fa}.terminal{min-height:24px;color:#526173;font-size:12px}.bar{height:5px;background:#dbe2ea;overflow:hidden;border-radius:5px;margin:13px 0 8px}.fill{height:100%;width:0;background:#51677e}.percent{color:#1d2632;font-size:17px;font-weight:650}.funny{margin-top:7px;color:#718096;font-size:10px}.note{margin-top:12px;color:#718096;font-size:11px}
-</style>
-</head>
-<body>
-<main>
-  <div class="card">
-    <header>
-      <div class="brand">PASSWORD SECURITY LAB <span style="color:#cbd5e1">/</span> LOCAL AUDIT</div>
-      <h1>Password Security Lab</h1>
-      <p class="sub">Modern password-pattern analysis for fictional data. Local simulation only.</p>
-    <div class="status"><span class="dot"></span>ENGINE READY</div></header>
-
-    <div class="section">
-      <div class="grid">
+*{box-sizing:border-box}:root{color-scheme:light}body{margin:0;background:#eef1f5;color:#1d2632;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 10% 10%,rgba(70,120,190,.10),transparent 32%),radial-gradient(circle at 90% 20%,rgba(55,170,150,.08),transparent 30%)}main{max-width:1100px;margin:0 auto;padding:32px 20px 60px}.card{background:rgba(255,255,255,.97);border:1px solid #d5dce5;border-radius:14px;padding:28px;box-shadow:0 18px 50px rgba(30,45,65,.10);position:relative;overflow:hidden}.card:before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,#4f7fb8,#61a99b,#7c8fc4)}header{display:grid;grid-template-columns:1fr auto;gap:8px 20px;border-bottom:1px solid #d5dce5;padding-bottom:20px;margin-bottom:25px}.brand{font-size:11px;font-weight:700;letter-spacing:1.8px;color:#4f6f96;grid-column:1}.status{font-size:11px;color:#56705f;white-space:nowrap;grid-column:2;grid-row:1}.dot{display:inline-block;width:7px;height:7px;background:#55a978;border-radius:50%;margin-right:7px;box-shadow:0 0 9px rgba(85,169,120,.45)}h1{font-size:32px;line-height:1.1;font-weight:650;letter-spacing:-.8px;margin:8px 0;color:#17212d;grid-column:1/-1}.sub{color:#647286;font-size:14px;margin:0;grid-column:1/-1}.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}@media(max-width:700px){.grid{grid-template-columns:1fr}header{display:block}.status{margin-top:12px}}label{display:block;color:#647286;font-size:11px;font-weight:650;letter-spacing:.8px;text-transform:uppercase;margin-bottom:7px}input,select{width:100%;padding:11px 12px;background:#f7f9fb;border:1px solid #cbd4df;border-radius:8px;color:#1d2632;font:inherit;font-size:14px;transition:.15s}input:focus,select:focus{outline:none;border-color:#8fa0b2;box-shadow:0 0 0 3px rgba(96,112,132,.10)}.check{display:flex;align-items:center;gap:9px;margin-top:16px;color:#657386;font-size:12px;text-transform:none;letter-spacing:0;font-weight:400}.check input{width:auto}button{width:100%;margin-top:19px;padding:12px 14px;background:#365a7d;color:#fff;border:0;border-radius:8px;font:inherit;font-weight:700;cursor:pointer;transition:.15s;box-shadow:0 5px 14px rgba(54,90,125,.18)}button:hover{background:#416b93;transform:translateY(-1px)}button:disabled{opacity:.5;cursor:wait;transform:none}.riskbox{margin-top:18px;padding:15px;border:1px solid #c9d9ea;background:#eef6ff;border-radius:9px;color:#365a7d;font-size:12px}.riskbox b{display:block;color:#244f7c;margin-bottom:5px}.info{margin-top:20px;padding:13px 14px;border:1px solid #d5dce5;background:#f7f9fb;border-radius:9px;color:#7f8a9a;font-size:11px}.stats{display:flex;gap:9px;flex-wrap:wrap;margin:22px 0 15px}.stat{min-width:105px;padding:11px 12px;background:#f8fafc;border:1px solid #d5dce5;border-radius:9px}.stat b{display:block;color:#1d2632;font-size:18px}.muted{color:#707b8b;font-size:9px;text-transform:uppercase;letter-spacing:.6px}h2{font-size:16px;font-weight:650;color:#273444;margin:20px 0 10px}.list{max-height:70vh;overflow:auto;border:1px solid #d5dce5;border-radius:9px;background:#f8fafc}.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 11px;border-bottom:1px solid #d5dce5;font-size:12px}.row:last-child{border-bottom:0}.row:hover{background:#eef3f7}.badge{padding:3px 7px;border:1px solid #cbd4df;background:#eef2f6;color:#657386;border-radius:5px;font-size:9px}.ai{color:#526173}.weak{color:#b64c58}.medium{color:#9a761d}.strong{color:#2c8054}.bruh{color:#b64c58;font-weight:700}.unpredictable{color:#51677e;font-weight:700}.loader{margin-top:20px;padding:17px;border:1px solid #d5dce5;border-radius:9px;background:#f5f7fa}.terminal{min-height:24px;color:#526173;font-size:12px}.bar{height:5px;background:#dbe2ea;overflow:hidden;border-radius:5px;margin:13px 0 8px}.fill{height:100%;width:0;background:#51677e}.percent{color:#1d2632;font-size:17px;font-weight:650}.funny{margin-top:7px;color:#718096;font-size:10px}.note{margin-top:12px;color:#718096;font-size:11px}
+</style></head><body><main><div class="card"><header><div class="brand">PASSWORD SECURITY LAB <span style="color:#cbd5e1">/</span> LOCAL AUDIT</div><div class="status"><span class="dot"></span>ENGINE READY</div><h1>Password Security Lab</h1><p class="sub">Modern password-pattern analysis for fictional data. Local simulation only.</p></header>
+<div class="section"><div class="grid">
 <div><label for="name">Fictional name</label><input id="name" placeholder="Alex Morgan"></div>
 <div><label for="dob">Fictional date of birth</label><input id="dob" type="date" aria-label="Date of birth"></div>
 <div><label for="favorite">Favorite thing (fictional)</label><input id="favorite" placeholder="Dolphin, soccer, music..."></div>
+<div><label for="favoriteNumber">Favorite number (fictional)</label><input id="favoriteNumber" type="number" min="0" max="999999999" placeholder="42"></div>
+<div><label for="favoriteColor">Favorite color (fictional)</label><input id="favoriteColor" placeholder="Blue"></div>
 <div><label for="nickname">Nickname (fictional)</label><input id="nickname" placeholder="Alex"></div>
 <div><label for="place">Favorite place (fictional)</label><input id="place" placeholder="Beach, city, park..."></div>
 <div><label for="hobby">Favorite hobby (fictional)</label><input id="hobby" placeholder="Skateboarding"></div>
@@ -62,20 +21,7 @@ h2{font-size:16px;font-weight:650;color:#dbe1e9;margin:20px 0 10px}
 <div><label for="count">How many examples</label><select id="count"><option value="1000">1,000</option><option value="3000" selected>3,000</option><option value="5000">5,000</option></select></div>
 <div><label for="sort">Sort by</label><select id="sort"><option value="generated">Generated order</option><option value="ai-likely">Pattern score</option><option value="strength-desc">Strongest first</option><option value="strength-asc">Weakest first</option><option value="length-desc">Longest first</option><option value="length-asc">Shortest first</option><option value="az">A → Z</option><option value="za">Z → A</option></select></div>
 </div>
-
-      <label class="check">
-        <input id="chaos" type="checkbox" checked>
-        Include random high-entropy examples
-      </label>
-
-      <button id="go" type="button">Generate example passwords</button>
-
-      <div id="out"></div>
-
-      <div class="info"><strong>TEST DATA ONLY</strong><br>This security lab uses fictional example data. Do not enter real passwords or use this tool to access another person's account.</div>
-    </div>
-  </div>
-</main>
-<script defer src="script.js?v=balance5"></script>
-</body>
-</html>
+<label class="check"><input id="chaos" type="checkbox" checked> Include random high-entropy examples</label>
+<button id="go" type="button">Generate example passwords</button><div id="out"></div>
+<div class="info"><strong>TEST DATA ONLY</strong><br>This security lab uses fictional example data. Do not enter real passwords or use this tool to access another person's account.</div>
+</div></div></main><script defer src="script.js?v=color1"></script></body></html>
