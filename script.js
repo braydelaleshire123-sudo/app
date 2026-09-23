@@ -35,12 +35,12 @@ function generate(count,type,chaos,seed,profile){
  while(set.size<count){
   let p='';
   if(type==='numbers'){
-    if(exactDateExamples.length && set.size<Math.min(12,count)) p=exactDateExamples[set.size%exactDateExamples.length];
-    else if(exactDateExamples.length && r()<0.8) p=datePieces[Math.floor(r()*datePieces.length)];
-    else p=String(Math.floor(r()*90000000)+10000000);
+    if(exactDateExamples.length && set.size<Math.min(8,count)) p=exactDateExamples[set.size%exactDateExamples.length];
+    else if(exactDateExamples.length && r()<0.55) p=datePieces[Math.floor(r()*datePieces.length)];
+    else if(chaos) p=String(Math.floor(r()*90000000)+10000000);\n    else p=datePieces.length?datePieces[(set.size)%datePieces.length]:String((set.size+1)*111111);
   } else if((type==='words'||type==='mixed'||type==='all') && terms.length && r()<0.42){
     const a=terms[Math.floor(r()*terms.length)], b=terms.length>1?terms[Math.floor(r()*terms.length)]:first;
-    const suffix=r()<0.8 && datePieces.length ? datePieces[Math.floor(r()*datePieces.length)] : (Math.floor(r()*90)+10).toString();
+    const suffix=r()<0.6 && datePieces.length ? datePieces[Math.floor(r()*datePieces.length)] : (Math.floor(r()*90)+10).toString();
     const join=r()<0.45?'':(r()<0.5?'_':'');
     p=a+join+b+suffix;
     if(r()<0.35)p=p[0].toUpperCase()+p.slice(1);
