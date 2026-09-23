@@ -31,21 +31,30 @@ function generate(count,type,chaos,seed,profile){
    const parts=pr.dob.split('-'); dobYear=parts[0]; dobMonth=parts[1]; dobDay=parts[2];
  }
  const datePieces=[dobYear,dobYear.slice(-2),dobMonth,dobDay,dobMonth+dobDay,dobDay+dobMonth,dobMonth+dobDay+dobYear.slice(-2),dobDay+dobMonth+dobYear.slice(-2)].filter(Boolean);
+ const exactDateExamples=[dobYear,dobYear+dobMonth+dobDay,dobMonth+dobDay+dobYear.slice(-2),dobDay+dobMonth+dobYear.slice(-2)].filter(Boolean);
  while(set.size<count){
   let p='';
   if(type==='numbers'){
-    if(datePieces.length && set.size<Math.min(12,count)) p=exactDateExamples[set.size%exactDateExamples.length];
-    else if(datePieces.length && r()<0.72) p=datePieces[Math.floor(r()*datePieces.length)];
+    if(exactDateExamples.length && set.size<Math.min(12,count)) p=exactDateExamples[set.size%exactDateExamples.length];
+    else if(exactDateExamples.length && r()<0.8) p=datePieces[Math.floor(r()*datePieces.length)];
     else p=String(Math.floor(r()*90000000)+10000000);
-  } else if((type==='words'||type==='mixed'||type==='all') && terms.length && r()<0.65){
+  } else if((type==='words'||type==='mixed'||type==='all') && terms.length && r()<0.42){
     const a=terms[Math.floor(r()*terms.length)], b=terms.length>1?terms[Math.floor(r()*terms.length)]:first;
-    const suffix=r()<0.85 && datePieces.length ? datePieces[Math.floor(r()*datePieces.length)] : (Math.floor(r()*900)+100).toString();
-    const join=r()<0.35?'':(r()<0.5?'_':'');
+    const suffix=r()<0.8 && datePieces.length ? datePieces[Math.floor(r()*datePieces.length)] : (Math.floor(r()*90)+10).toString();
+    const join=r()<0.45?'':(r()<0.5?'_':'');
     p=a+join+b+suffix;
     if(r()<0.35)p=p[0].toUpperCase()+p.slice(1);
     if(r()<0.18)p+='!';
-  } else if(type==='words') p=randomish(r,8+Math.floor(r()*7),false)+'-'+randomish(r,4,false);
-  else p=randomish(r,(chaos?18:11)+Math.floor(r()*(chaos?10:7)),type==='mixed'||type==='all');
+  } else if(type==='words'){
+    p=randomish(r,5+Math.floor(r()*5),false)+'-'+randomish(r,3,false);
+  } else {
+    const len=chaos?14+Math.floor(r()*10):10+Math.floor(r()*7);
+    p=randomish(r,len,type==='mixed'||type==='all');
+    if(type==='mixed'||type==='all'){
+      if(r()<0.45 && terms.length)p=terms[Math.floor(r()*terms.length)]+(r()<0.5?'_':'')+Math.floor(r()*90+10);
+      if(r()<0.3 && datePieces.length)p+=datePieces[Math.floor(r()*datePieces.length)];
+    }
+  }
   if(p.length>=6)set.add(p);
  }
  return [...set];
